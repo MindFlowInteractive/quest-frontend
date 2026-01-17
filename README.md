@@ -127,8 +127,7 @@ This project is licensed under the **MIT License**.
 ## 🔗 Related Repositories
 
 * [Quest Service Backend](https://github.com/MindFlowInteractive/quest-service)
-* [Quest Service Smart Contracts](https://github.com/yourusername/quest-service-contracts)
-
+* [Quest Service Smart Contracts](https://github.com/MindFlowInteractive/quest-smartcontract)
 ## 💬 Support
 
 For questions or support, please open an issue or join our community discussions.
