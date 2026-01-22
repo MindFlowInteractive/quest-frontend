@@ -3,8 +3,14 @@ import contributor3 from "../assets/contributor3.jpg";
 import contributor4 from "../assets/contributor4.jpg";
 import contributor5 from "../assets/contributor5.jpg";
 
+interface Contributor {
+    id: number;
+    name: string;
+    role: string;
+    avatarUrl: string;
+}
 
-const contributors = [
+const contributors : Contributor[] = [
   {
     id: 1,
     name: "Abdulrazik Abdulsamad",
@@ -43,7 +49,7 @@ const ContributorsSection = () => {
         <div className="mb-22 text-center">
           <h2
             id="contributors-title"
-            className="text-xllg:text-2xl font-bold tracking-tight  sm:text-2xl"
+            className="text-xl lg:text-2xl font-bold tracking-tight  sm:text-2xl"
           >
             Our Contributors
           </h2>
@@ -54,9 +60,9 @@ const ContributorsSection = () => {
           {contributors.map((person, index) => (
             <div
               key={person.id}
-              className="group block min-w-75 mx-auto shrink-0 snap-start"
+              className="group block min-w-75 mx-auto shrink-0 snap-start "
             >
-              <div className="flex flex-col gap-3 pt-8 mx-auto pr-1">
+              <div className="flex flex-col gap-3 pt-12 mx-auto pr-1">
                 <div
                   className="h-90 w-full overflow-hidden bg-gray-900"
                   style={{
