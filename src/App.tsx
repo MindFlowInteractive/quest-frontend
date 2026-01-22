@@ -1,5 +1,6 @@
 import FaqsSection from "./components/FaqsSection"
 import ContributorsSection from "./components/ContributorsSection"
+import SignInPage from "./pages/SignIn"
 function App() {
  
 
@@ -7,6 +8,7 @@ function App() {
     <>
       <ContributorsSection/>
       <FaqsSection/>
+      <SignInPage />
     </>
   )
 }
