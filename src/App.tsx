@@ -1,14 +1,18 @@
+
 import "./App.css";
 import NavBar from "../components/Navbar";
 
+import FaqsSection from "./components/FaqsSection"
+import ContributorsSection from "./components/ContributorsSection"
 function App() {
+ 
+
   return (
     <>
-      <div className="min-h-screen w-full bg-black">
-        <NavBar />
+         <NavBar />
+      <ContributorsSection/>
+      <FaqsSection/>
 
-        <main className=" px-4 py-10"></main>
-      </div>
     </>
   );
 }
