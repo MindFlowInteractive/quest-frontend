@@ -1,5 +1,6 @@
 import FaqsSection from "./components/FaqsSection"
 import ContributorsSection from "./components/ContributorsSection"
+
 function App() {
  
 
