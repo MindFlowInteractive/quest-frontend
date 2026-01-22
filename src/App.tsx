@@ -1,16 +1,18 @@
-import FaqsSection from "./components/FaqsSection"
-import ContributorsSection from "./components/ContributorsSection"
-import SignInPage from "./pages/SignIn"
-function App() {
- 
+import "./App.css";
+import NavBar from "./components/Navbar";
+import FaqsSection from "./components/FaqsSection";
+import ContributorsSection from "./components/ContributorsSection";
+import SignInPage from "./pages/SignIn";
 
+function App() {
   return (
     <>
-      <ContributorsSection/>
-      <FaqsSection/>
+      <NavBar />
+      <ContributorsSection />
+      <FaqsSection />
       <SignInPage />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

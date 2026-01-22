@@ -1,10 +1,17 @@
+import { useRef, useState, useEffect } from "react";
 import contributor2 from "../assets/contributor2.jpg";
 import contributor3 from "../assets/contributor3.jpg";
 import contributor4 from "../assets/contributor4.jpg";
 import contributor5 from "../assets/contributor5.jpg";
 
+interface Contributor {
+    id: number;
+    name: string;
+    role: string;
+    avatarUrl: string;
+}
 
-const contributors = [
+const contributors : Contributor[] = [
   {
     id: 1,
     name: "Abdulrazik Abdulsamad",
@@ -32,31 +39,63 @@ const contributors = [
   // Add more contributors if needed
 ];
 
-const ContributorsSection = () => {
+const ContributorsSection: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isHovered, setIsHovered] = useState(false);
+    
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null;
+
+    if (isHovered) {
+      interval = setInterval(() => {
+        if (containerRef.current) {
+          containerRef.current.scrollLeft += 1.5;
+          const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+          if (scrollLeft + clientWidth >= scrollWidth - 1) {
+            containerRef.current.scrollLeft = 0;
+          }
+        }
+      }, 20);
+    } else {
+      if (interval) clearInterval(interval);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isHovered]);
+
   return (
     <section
-      className=" bg-[#121212] py-16 text-white "
+      className="bg-[#121212] py-16 text-white"
       aria-labelledby="contributors-title"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" >
         {/* Section Header */}
         <div className="mb-22 text-center">
           <h2
             id="contributors-title"
-            className="text-xllg:text-2xl font-bold tracking-tight  sm:text-2xl"
+            className="text-xl lg:text-2xl font-bold tracking-tight  sm:text-2xl"
           >
             Our Contributors
           </h2>
         </div>
 
         {/* Horizontal Scrollable Container */}
-        <div className="flex gap-2 overflow-x-auto snap-x snap-mandatory mt-12 px-2 pb-4 scroll-px-6 scrollbar-hide  scroll-smooth touch-pan-x">
-          {contributors.map((person, index) => (
+        <div className="flex gap-2 overflow-x-auto mt-12 px-2 pb-4 scrollbar-hide touch-pan-x"
+            ref={containerRef}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{ scrollBehavior: 'auto' }}
+        >
+          <div
+            className="flex h-full gap-5.75" style={{ whiteSpace: "nowrap" }}
+          >
+            {contributors.map((person, index) => (
             <div
               key={person.id}
-              className="group block min-w-75 mx-auto shrink-0 snap-start"
+              className="group block min-w-75 mx-auto shrink-0 snap-start "
             >
-              <div className="flex flex-col gap-3 pt-8 mx-auto pr-1">
+              <div className="flex flex-col gap-3 pt-12 mx-auto pr-1 w-full">
                 <div
                   className="h-90 w-full overflow-hidden bg-gray-900"
                   style={{
@@ -89,6 +128,7 @@ const ContributorsSection = () => {
               </div>
             </div>
           ))}
+          </div>
         </div>
       </div>
     </section>
