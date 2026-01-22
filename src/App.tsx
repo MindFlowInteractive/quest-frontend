@@ -1,11 +1,13 @@
-import ProfileForm from "./components/ProfileForm";
+import FaqsSection from "./components/FaqsSection"
+import ContributorsSection from "./components/ContributorsSection"
 
 const App = () => {
   return (
-    <div>
-      <ProfileForm />
-    </div>
-  );
-};
+    <>
+      <ContributorsSection/>
+      <FaqsSection/>
+    </>
+  )
+}
 
 export default App;
