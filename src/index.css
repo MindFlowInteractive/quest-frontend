@@ -30,3 +30,56 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
+
+
+/* Thin, subtle scrollbar — Figma-friendly */
+.scrollbar-thin {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(234, 179, 8, 0.4); /* yellow-500 */
+  border-radius: 9999px;
+}
+
+
+/* Arrow-shaped button */
+.arrow-button {
+  position: relative;
+  clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+}
+
+/* For better browser support, use pseudo-elements */
+.arrow-button-alt {
+  position: relative;
+}
+
+.arrow-button-alt::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: inherit;
+  clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
+}
+
+.arrow-button-alt::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: inherit;
+  clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+}
