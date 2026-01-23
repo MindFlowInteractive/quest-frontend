@@ -7,6 +7,7 @@ import SignInPage from "./pages/SignIn";
 import WhyShouldYouPlaySection from "./components/why-should-you-play-section";
 import GameModeDescription from "./components/GameMode/GameModeDescription";
 import GameModesList from "./components/GameMode/GameModesList";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <SignInPage />
       <GameModeDescription/>
       <GameModesList/>
+      <Footer/>
     </>
   );
 }
