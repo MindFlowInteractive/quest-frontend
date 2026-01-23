@@ -39,4 +39,43 @@
 
 .read-the-docs {
   color: #888;
-} */
+}
+
+
+/* Add smooth transitions */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Selection color */
+::selection {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Focus styles */
+button:focus, input:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
