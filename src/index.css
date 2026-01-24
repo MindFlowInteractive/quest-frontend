@@ -31,7 +31,6 @@
   display: none; /* Chrome, Safari */
 }
 
-
 /* Thin, subtle scrollbar — Figma-friendly */
 .scrollbar-thin {
   scrollbar-width: thin; /* Firefox */
@@ -50,7 +49,6 @@
   border-radius: 9999px;
 }
 
-
 /* Arrow-shaped button */
 .arrow-button {
   position: relative;
@@ -63,7 +61,7 @@
 }
 
 .arrow-button-alt::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -74,7 +72,7 @@
 }
 
 .arrow-button-alt::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   top: 0;
@@ -82,4 +80,52 @@
   width: 20px;
   background: inherit;
   clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+}
+
+.text-modal {
+  background: linear-gradient(
+    0deg,
+    #19284e -21.43%,
+    #fdd405 0.83%,
+    #ee2b22 94.86%,
+    #f9bc07 116.4%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---------- KEYFRAMES  GameplayModal---------- */
+
+@keyframes overlay-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes content-show {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.alert-overlay-modal {
+  background: rgba(33, 31, 31, 0.7);
+  animation: overlay-show 150ms ease-out forwards;
+}
+
+.alert-content-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  animation: content-show 150ms ease-out forwards;
 }
