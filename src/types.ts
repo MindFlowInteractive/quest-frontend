@@ -11,3 +11,12 @@ export interface ActivityItem {
   earnings: number;
   image: string;
 }
+
+export interface LeaderboardPlayer {
+  id: number;
+  name: string;
+  avatar: string;
+  level: number;
+  score: number;
+  scoreIcon: string;
+}

@@ -1,0 +1,60 @@
+import type { LeaderboardPlayer } from "@/types";
+
+export const mockLeaderboardPlayers: LeaderboardPlayer[] = [
+  {
+    id: 1,
+    name: "Abbas",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop",
+    level: 56,
+    score: 50000,
+    scoreIcon: "/bag-coins.svg",
+  },
+  {
+    id: 2,
+    name: "John",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop",
+    level: 53,
+    score: 45000,
+    scoreIcon: "/bag-coins-2.svg",
+  },
+  {
+    id: 3,
+    name: "Robert",
+    avatar: "https://images.unsplash.com/photo-1544725176-7c40e5a2c9f9?w=200&h=200&fit=crop",
+    level: 47,
+    score: 39000,
+    scoreIcon: "/bag-coins-2.svg",
+  },
+  {
+    id: 4,
+    name: "Duncan",
+    avatar: "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=200&h=200&fit=crop",
+    level: 46,
+    score: 41000,
+    scoreIcon: "/coins.svg",
+  },
+  {
+    id: 5,
+    name: "Sam",
+    avatar: "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=200&h=200&fit=crop",
+    level: 44,
+    score: 39000,
+    scoreIcon: "/coins.svg",
+  },
+  {
+    id: 6,
+    name: "John",
+    avatar: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&h=200&fit=crop",
+    level: 40,
+    score: 39000,
+    scoreIcon: "/coins-rocks.svg",
+  },
+  {
+    id: 7,
+    name: "Duncan",
+    avatar: "https://images.unsplash.com/photo-1545996124-0501ebae84d0?w=200&h=200&fit=crop",
+    level: 38,
+    score: 39000,
+    scoreIcon: "/coins.svg",
+  },
+];
