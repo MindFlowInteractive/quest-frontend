@@ -4,6 +4,7 @@ import "./App.css";
 import NavBar from "./components/Navbar";
 import FaqsSection from "./components/FaqsSection";
 import ContributorsSection from "./components/ContributorsSection";
+import AboutUsSection from "./components/AboutUsSection";
 import SignInPage from "./pages/SignIn";
 import AccountSettings from "./components/AccountSettings";
 import WhyShouldYouPlaySection from "./components/why-should-you-play-section";
@@ -20,6 +21,7 @@ const Home = () => (
     <HeroSection />
     <HowToPlay />
     <WhyShouldYouPlaySection />
+    <AboutUsSection />
     <ContributorsSection />
     <FaqsSection />
     <SignInPage />

@@ -5,13 +5,13 @@ import contributor4 from "../assets/contributor4.jpg";
 import contributor5 from "../assets/contributor5.jpg";
 
 interface Contributor {
-    id: number;
-    name: string;
-    role: string;
-    avatarUrl: string;
+  id: number;
+  name: string;
+  role: string;
+  avatarUrl: string;
 }
 
-const contributors : Contributor[] = [
+const contributors: Contributor[] = [
   {
     id: 1,
     name: "Abdulrazik Abdulsamad",
@@ -36,13 +36,33 @@ const contributors : Contributor[] = [
     role: "Full Stack Web Developer",
     avatarUrl: contributor2,
   },
-  // Add more contributors if needed
 ];
 
 const ContributorsSection: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [isHovered, setIsHovered] = useState(false);
-    
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Intersection observer for entrance animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Auto-scroll on hover
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
 
@@ -66,68 +86,100 @@ const ContributorsSection: React.FC = () => {
 
   return (
     <section
-      className="bg-[#121212] py-16 text-white"
+      ref={sectionRef}
+      className="bg-[#121212] py-16 md:py-24 text-white overflow-hidden"
       aria-labelledby="contributors-title"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-22 text-center">
+        <div
+          className={`mb-12 md:mb-16 text-center transition-all duration-700 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
+        >
           <h2
             id="contributors-title"
-            className="text-xl lg:text-2xl font-bold tracking-tight  sm:text-2xl"
+            className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight"
           >
-            Our Contributors
+            Contributors
           </h2>
         </div>
 
-        {/* Horizontal Scrollable Container */}
-        <div className="flex gap-2 overflow-x-auto mt-12 px-2 pb-4 scrollbar-hide touch-pan-x"
+        {/* Accordion Cards Container */}
+        <div
+          className={`relative transition-all duration-1000 delay-300 ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}
+        >
+          {/* Horizontal Scrollable Container */}
+          <div
+            className="flex overflow-x-auto py-8 md:py-12 scrollbar-hide touch-pan-x"
             ref={containerRef}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            style={{ scrollBehavior: 'auto' }}
-        >
-          <div
-            className="flex h-full gap-5.75" style={{ whiteSpace: "nowrap" }}
+            style={{ scrollBehavior: "auto" }}
           >
-            {contributors.map((person, index) => (
-            <div
-              key={person.id}
-              className="group block min-w-75 mx-auto shrink-0 snap-start "
-            >
-              <div className="flex flex-col gap-3 pt-12 mx-auto pr-1 w-full">
+            <div className="flex items-end mx-auto">
+              {contributors.map((person, index) => (
                 <div
-                  className="h-90 w-full overflow-hidden bg-gray-900"
+                  key={person.id}
+                  className={`group shrink-0 transition-all duration-500 contributor-float ${
+                    isVisible
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-16"
+                  }`}
                   style={{
-                    transform: index % 2 === 0 ? "skewY(-8deg)" : "skewY(8deg)",
-                    transformOrigin: index % 2 === 0 ? "top left" : "top right",
+                    transitionDelay: `${index * 150 + 400}ms`,
+                    animationDelay: `${index * 0.5}s`,
                   }}
                 >
-                  <img
-                    src={person.avatarUrl}
-                    alt={`${person.name} - ${person.role}`}
-                    className="h-full w-full object-cover object-center select-none pointer-events-none"
-                    draggable={false}
-                    style={{
-                      transform:
-                        index % 2 === 0
-                          ? "skewY(8deg) scale(1.15)"
-                          : "skewY(-8deg) scale(1.15)",
-                      transformOrigin: "center center",
-                    }}
-                  />
+                  <div className="flex flex-col w-44 md:w-52 lg:w-60">
+                    {/* Skewed image container - parallelogram shape */}
+                    <div
+                      className="relative h-56 md:h-72 lg:h-80 w-full overflow-hidden shadow-xl transition-all duration-500 group-hover:scale-105 group-hover:z-10 contributor-card-hover"
+                      style={{
+                        transform:
+                          index % 2 === 0 ? "skewY(-8deg)" : "skewY(8deg)",
+                        transformOrigin:
+                          index % 2 === 0 ? "top left" : "top right",
+                      }}
+                    >
+                      {/* Counter-skew the image to keep it straight */}
+                      <img
+                        src={person.avatarUrl}
+                        alt={`${person.name} - ${person.role}`}
+                        className="h-full w-full object-cover object-center select-none pointer-events-none transition-transform duration-500 group-hover:scale-110"
+                        draggable={false}
+                        style={{
+                          transform:
+                            index % 2 === 0
+                              ? "skewY(8deg) scale(1.15)"
+                              : "skewY(-8deg) scale(1.15)",
+                          transformOrigin: "center center",
+                        }}
+                      />
+                    </div>
+
+                    {/* Contributor info - left aligned */}
+                    <div
+                      className={`text-left mt-6 transition-all duration-500 ${
+                        isVisible
+                          ? "opacity-100 translate-y-0"
+                          : "opacity-0 translate-y-4"
+                      }`}
+                      style={{ transitionDelay: `${index * 150 + 600}ms` }}
+                    >
+                      <h3 className="text-sm md:text-base font-bold text-white group-hover:text-[#ca8a04] transition-colors duration-300">
+                        {person.name}
+                      </h3>
+                      <p className="text-xs md:text-sm mt-1 font-medium text-gray-400">
+                        {person.role}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <h3 className="text-lg font-bold text-white">
-                    {person.name}
-                  </h3>
-                  <p className="text-sm mt-2 font-medium text-gray-400">
-                    {person.role}
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
-          ))}
           </div>
         </div>
       </div>
