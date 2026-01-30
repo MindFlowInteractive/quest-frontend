@@ -1,11 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import HeroSection from "./components/HeroSection";
 import "./App.css";
 import NavBar from "./components/Navbar";
 import FaqsSection from "./components/FaqsSection";
 import ContributorsSection from "./components/ContributorsSection";
 import AboutUsSection from "./components/AboutUsSection";
-import SignInPage from "./pages/SignIn";
+import SignIn from "./pages/auth/SignIn";
 import AccountSettings from "./components/AccountSettings";
 import WhyShouldYouPlaySection from "./components/why-should-you-play-section";
 import GameModeDescription from "./components/GameMode/GameModeDescription";
@@ -26,7 +26,6 @@ const Home = () => (
     <AboutUsSection />
     <ContributorsSection />
     <FaqsSection />
-    <SignInPage />
     <GameModeDescription />
     <GameModesList />
     <RecentActivity activities={mockActivities} />
@@ -35,11 +34,15 @@ const Home = () => (
 );
 
 function App() {
+  const location = useLocation();
+  const showNavBar = location.pathname !== '/sign-in';
+
   return (
     <>
-      <NavBar />
+      {showNavBar && <NavBar />}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/sign-in" element={<SignIn />} />
         <Route path="/settings" element={<AccountSettings />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
          <Route path="/get-started" element={<GetStarted />} />

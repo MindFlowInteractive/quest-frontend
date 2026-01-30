@@ -3,11 +3,14 @@ import LandingPage from '../pages/LandingPage';
 import Gameplay from '../pages/Gameplay';
 import LeaderboardPage from '../pages/LeaderboardPage';
 import { GetStarted }  from '@/pages/GetStarted';
+import SignIn from '../pages/auth/SignIn';
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      
+      <Route path="/sign-in" element={<SignIn />} />
       
       <Route path="/gameplay" element={<Gameplay />} />
       
