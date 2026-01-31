@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import hero from "../assets/hero-image.png";
 import laptop from "../assets/hero-bg.jpg";
 
@@ -29,17 +30,19 @@ const HeroSection = () => {
               Join the Adventure!
             </p>
           </div>
-          <button
-            className="bg-[#ca8a04] hover:bg-[#b07803] text-white font-bold py-2 px-4 lg:py-3 lg:px-12 rounded-4xl
-             text-lg transition-all duration-300 shadow-xl cursor-pointer"
-            aria-label="Get Started with LogiQuest"
+          <Link 
+            to="/get-started"
+            className="bg-[#ca8a04]! hover:bg-[#b07803]! text-white hover:text-white/90! font-bold py-2 px-4 lg:py-3 lg:px-12 rounded-4xl
+             text-lg inline-block transition-all duration-300 shadow-xl cursor-pointer"
           >
             Get Started
-          </button>
+          </Link>
+         
           <p className="text-sm text-gray-300 font-normal max-w-md mx-auto lg:mx-0">
             Dive into a fun and engaging world of cause-and-effect puzzles and
             logical challenges!
           </p>
+
         </div>
 
         {/* Right Content: Hero Image */}
