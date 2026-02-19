@@ -2,6 +2,7 @@ import gameModeCategory from '../../assets/game-mode-categories.png'
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import { setGameMode } from './gameSliceStore'
 import type { GameModeDetail } from './gameSliceStore'
+import GameModeDropdown from '../gameModes/GameModeDropdown'
 
 const GameModesList = () => {
   const dispatch = useAppDispatch()
@@ -16,6 +17,10 @@ const GameModesList = () => {
           className='h-auto select-none pointer-events-none'
         />
       </figure>
+
+      <div className="w-full flex justify-center">
+        <GameModeDropdown />
+      </div>
 
       <ol className='flex flex-col gap-3 lg:gap-5 justify-center items-center w-full text-white uppercase text-xl md:text-2xl xl:text-3xl font-medium'>
         {allModes.map((mode: GameModeDetail) => (
