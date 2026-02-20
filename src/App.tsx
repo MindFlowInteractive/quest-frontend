@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import HeroSection from "./components/HeroSection";
 import "./App.css";
-import NavBar from "./components/Navbar";
+import GameplayNavbar from "./components/GameplayNavbar";
 import FaqsSection from "./components/FaqsSection";
 import ContributorsSection from "./components/ContributorsSection";
 import AboutUsSection from "./components/AboutUsSection";
@@ -39,7 +39,7 @@ function App() {
 
   return (
     <>
-      {showNavBar && <NavBar />}
+      {showNavBar && <GameplayNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
