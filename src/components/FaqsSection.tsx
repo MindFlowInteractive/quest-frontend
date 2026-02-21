@@ -60,23 +60,23 @@ const FaqsSection = () => {
   };
 
   return (
-    <section className="w-full bg-black py-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <section className="w-full bg-black py-16 md:py-24">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         
         {/* FAQ heading */}
-        <h2 className="text-4xl font-bold text-center text-white mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-10 md:mb-14">
           FAQs
         </h2>
 
-        <div className="space-y-4 mt-8 lg:mt-22">
+        <div className="mt-2 md:mt-4 space-y-2 md:space-y-3">
           {faqs.map((faq) => (
             <div key={faq.id} className="overflow-hidden">
               {/* Questions */}
               <button
                 onClick={() => toggle(faq.id)}
-                className="w-full flex justify-between items-center px-6 py-4 text-left"
+                className="w-full flex justify-between items-center py-4 md:py-5 text-left"
               >
-                <span className="lg:text-xl font-semibold text-white">
+                <span className="text-lg md:text-xl font-semibold text-white pr-4">
                   {faq.question}
                 </span>
 
@@ -94,7 +94,7 @@ const FaqsSection = () => {
 
               {/* Answers */}
               <div
-                className={`px-6 overflow-hidden transition-all duration-300 ${
+                className={`overflow-hidden transition-all duration-300 ${
                   openIds.includes(faq.id) ? "max-h-96 py-4" : "max-h-0"
                 }`}
               >
