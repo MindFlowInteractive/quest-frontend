@@ -4,6 +4,7 @@ import Gameplay from '../pages/Gameplay';
 import LeaderboardPage from '../pages/LeaderboardPage';
 import { GetStarted }  from '@/pages/GetStarted';
 import SignIn from '../pages/auth/SignIn';
+import Dashboard from '../pages/Dashboard';
 
 const AppRoutes = () => {
   return (
@@ -16,6 +17,7 @@ const AppRoutes = () => {
       
       <Route path="/leaderboard" element={<LeaderboardPage />} />
       <Route path="/get-started" element={<GetStarted />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       
       <Route path="*" element={
         <div className="h-screen bg-black flex items-center justify-center text-white text-2xl">
