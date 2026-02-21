@@ -1,6 +1,4 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import RecentActivity from '../components/RecentActivity';
+import { RecentActivity } from '../components/RecentActivity';
 import Leaderboard from '../components/Leaderboard';
 import { mockLeaderboardPlayers } from '../data/mockLeaderboardData';
 import { mockActivities } from '../models/recentActivity';
