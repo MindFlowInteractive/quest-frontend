@@ -5,6 +5,7 @@ import laptop from "../assets/hero-bg.jpg";
 const HeroSection = () => {
   return (
     <section
+      id="hero"
       className="relative min-h-screen flex items-center bg-[#02352e] overflow-hidden px-6 py-12 lg:px-20"
       aria-label="Hero Section"
     >
@@ -30,14 +31,14 @@ const HeroSection = () => {
               Join the Adventure!
             </p>
           </div>
-          <Link 
+          <Link
             to="/get-started"
             className="bg-[#ca8a04]! hover:bg-[#b07803]! text-white hover:text-white/90! font-bold py-2 px-4 lg:py-3 lg:px-12 rounded-4xl
              text-lg inline-block transition-all duration-300 shadow-xl cursor-pointer"
           >
             Get Started
           </Link>
-         
+
           <p className="text-sm text-gray-300 font-normal max-w-md mx-auto lg:mx-0">
             Dive into a fun and engaging world of cause-and-effect puzzles and
             logical challenges!
