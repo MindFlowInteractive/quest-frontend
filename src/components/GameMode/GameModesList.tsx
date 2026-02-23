@@ -1,41 +1,41 @@
-import gameModeCategory from '../../assets/game-mode-categories.png'
-import { useAppDispatch, useAppSelector } from '../../hooks'
-import { setGameMode } from './gameSliceStore'
-import type { GameModeDetail } from './gameSliceStore'
-import GameModeDropdown from '../gameModes/GameModeDropdown'
+import type { GameModeDetail } from '../../data/gameModes'
 
-const GameModesList = () => {
-  const dispatch = useAppDispatch()
-  const { allModes, selectedModeId } = useAppSelector((state) => state.game)
+interface GameModesListProps {
+  allModes: GameModeDetail[]
+  selectedModeId: string
+  onModeSelect: (modeId: string) => void
+}
 
+const GameModesList = ({ allModes, selectedModeId, onModeSelect }: GameModesListProps) => {
   return (
-    <aside className='w-82 xl:w-100 2xl:w-122.5 flex flex-col gap-9 justify-center items-center m-3'>
-      <figure>
-        <img
-          src={gameModeCategory}
-          alt="Game Mode Categories"
-          className='h-auto select-none pointer-events-none'
-        />
-      </figure>
-
-      <div className="w-full flex justify-center">
-        <GameModeDropdown />
+    <aside className='w-full xl:max-w-[16rem] flex flex-col gap-3'>
+      <div className='relative flex items-center justify-center h-9'>
+        <span className='text-[10px] md:text-[11px] uppercase tracking-[0.18em] text-[#57E8D3] border border-[#2A4A4A] px-4 py-1 rounded-sm bg-[#061315]'>
+          Categories
+        </span>
       </div>
 
-      <ol className='flex flex-col gap-3 lg:gap-5 justify-center items-center w-full text-white uppercase text-xl md:text-2xl xl:text-3xl font-medium'>
-        {allModes.map((mode: GameModeDetail) => (
-          <li
-            key={mode.id}
-            onClick={() => dispatch(setGameMode(mode.id))}
-            className={`border border-[#323336] rounded-sm p-3 md:p-4 xl:p-4 w-full text-center leading-[100%] cursor-pointer transition-colors ${
-              selectedModeId === mode.id
-                ? 'bg-[#01100F] text-[#43AD6C]'
-                : 'hover:bg-[#01100F] hover:text-[#43AD6C]'
-            }`}
-          >
-            {mode.name}
-          </li>
-        ))}
+      <ol className='flex flex-col gap-1.5 w-full text-white uppercase text-[11px] md:text-xs font-normal tracking-wide'>
+        {allModes.map((mode: GameModeDetail) => {
+          const isActive = selectedModeId === mode.id
+
+          return (
+            <li key={mode.id} className='w-full'>
+              <button
+                type='button'
+                aria-pressed={isActive}
+                onClick={() => onModeSelect(mode.id)}
+                className={`w-full border rounded-sm px-3 py-2 text-left leading-tight cursor-pointer transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#43AD6C]/70 ${
+                  isActive
+                    ? 'border-[#1D3B3E] bg-[#0F2D2B] text-white shadow-[inset_0_0_20px_rgba(20,101,92,0.35)]'
+                    : 'border-[#1D2529] bg-[#0B1014] text-[#D9E2E1] hover:border-[#2D5052] hover:bg-[#0D2022] hover:text-white'
+                }`}
+              >
+                {mode.name}
+              </button>
+            </li>
+          )
+        })}
       </ol>
     </aside>
   )
