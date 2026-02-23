@@ -1,43 +1,60 @@
 import React from 'react'
-import { useAppSelector } from '../../hooks'
-import type { GameModeDetail } from './gameSliceStore'
+import type { GameModeDetail } from '../../data/gameModes'
+import bagCoins from '/bag-coins.svg'
 
-const SubHeaderText = ({ children }: { children: string }) => <h3 className='text-lg lg:text-xl text-white font-medium'>
+const SubHeaderText = ({ children }: { children: string }) => <h3 className='text-[10px] md:text-[11px] text-[#57E8D3] font-medium uppercase tracking-[0.14em]'>
    {children}
 </h3>
 
 const Container: React.FC<{ children: React.ReactNode }> = ({ children }: { children: React.ReactNode }) => (
-    <div className='border border-[#323336] rounded-sm p-4 xl:p-5 w-full text-left flex flex-col gap-5 leading-[100%] cursor-pointer'>
+    <div className='border border-[#1A2429] rounded-sm p-3 md:p-3.5 w-full text-left flex flex-col gap-2.5 leading-[100%] bg-[#0A1117] shadow-[inset_0_0_14px_rgba(4,17,22,0.65)]'>
         {children}
     </div>
 )
 
 const Paragraph = ({ children }: { children: string }) => (
-    <p className='text-white text-md md:text-base lg:text-lg font-light text-left'>
+    <p className='text-[#D8E3E5] text-[11px] md:text-xs font-light text-left leading-relaxed uppercase'>
         {children}
     </p>
 )
 
-const GameModeDescription = () => {
-  const gameState = useAppSelector((state) => state.game)
-  const { allModes, selectedModeId } = gameState
-  const selectedMode = allModes.find((mode: GameModeDetail) => mode.id === selectedModeId)
-  const currentMode = selectedMode || allModes[0]
+const StatItem = ({ label, value }: { label: string; value: string | number }) => (
+  <div className='flex flex-col gap-1 items-center min-w-[3.7rem]'>
+    <span className='text-[#5FD9CB] text-[9px] uppercase tracking-[0.12em]'>{label}</span>
+    <span className='text-white text-[11px] md:text-xs font-medium'>{value}</span>
+  </div>
+)
 
-  // Guard against missing data to avoid runtime errors
+interface GameModeDescriptionProps {
+  currentMode: GameModeDetail | null
+}
+
+const GameModeDescription = ({ currentMode }: GameModeDescriptionProps) => {
   if (!currentMode) {
     return null
   }
 
   return (
-    <div className='flex flex-col gap-4 lg:gap-8'>
-      <div className='relative text-xl font-light uppercase'>
-        <div className='w-full block shadow-[inset_3px_3px_24px_#033330] bg-[#02211F] h-14 lg:h-16 xl:h-18.25 mix-blend-color rounded-[11px] [clip-path:polygon(0%_0%,100%_0%,100%_73%,0%_100%)] -skew-x-20 text-white -top-10 xl:-top-20 '></div>
-        <h4 className='absolute top-1/2 left-2/7 lg:left-1/7 transform -translate-x-1/2 -translate-y-1/2 text-white text-md md:text-base lg:text-lg font-light text-left tracking-wide '>
-          {currentMode.name}
-        </h4>
-      </div>
-      <article className='w-[97%] lg:w-151.5 text-white font-light uppercase flex flex-col gap-4'>
+    <div className='w-full xl:flex-1 flex flex-col gap-3 transition-all duration-300 ease-out'>
+      <article
+        key={currentMode.id}
+        className='w-full text-white font-light uppercase flex flex-col gap-2.5 opacity-100 translate-y-0 transition-all duration-300 ease-out'
+      >
+        <section className='border border-[#162029] rounded-sm p-3 bg-[#090F15]'>
+          <div className='flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4'>
+            <img src={bagCoins} alt='' className='h-12 w-12 md:h-14 md:w-14 object-contain select-none pointer-events-none' />
+            <div className='grid grid-cols-3 gap-2 sm:gap-3 w-full sm:w-auto'>
+              <StatItem label='Questions' value={currentMode.questionCount === 0 ? '∞' : currentMode.questionCount} />
+              <StatItem label='Duration' value={currentMode.duration} />
+              <StatItem label='Max Score' value={currentMode.maxScore === 0 ? '∞' : currentMode.maxScore.toLocaleString()} />
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <SubHeaderText>{currentMode.name}</SubHeaderText>
+        </section>
+
         <section>
           <Container>
             <SubHeaderText>Description</SubHeaderText>
@@ -48,7 +65,7 @@ const GameModeDescription = () => {
         <section>
           <Container>
             <SubHeaderText>Features</SubHeaderText>
-            <ul className='list-disc list-inside text-white text-sm lg:text-base font-light'>
+            <ul className='list-disc list-inside text-[#D8E3E5] text-[11px] md:text-xs font-light space-y-1 leading-relaxed'>
               {currentMode.features.map((feature: string, idx: number) => (
                 <li key={idx}>{feature}</li>
               ))}
@@ -58,8 +75,8 @@ const GameModeDescription = () => {
 
         <section>
           <Container>
-            <SubHeaderText>Instructions</SubHeaderText>
-            <ul className='list-disc list-inside text-white text-sm lg:text-base font-light'>
+            <SubHeaderText>Instruction</SubHeaderText>
+            <ul className='list-disc list-inside text-[#D8E3E5] text-[11px] md:text-xs font-light space-y-1 leading-relaxed'>
               {currentMode.instructions.map((instruction: string, idx: number) => (
                 <li key={idx}>{instruction}</li>
               ))}

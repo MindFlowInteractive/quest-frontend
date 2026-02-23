@@ -8,8 +8,7 @@ import AboutUsSection from "./components/AboutUsSection";
 import SignIn from "./pages/auth/SignIn";
 import AccountSettings from "./components/AccountSettings";
 import WhyShouldYouPlaySection from "./components/why-should-you-play-section";
-import GameModeDescription from "./components/GameMode/GameModeDescription";
-import GameModesList from "./components/GameMode/GameModesList";
+import GameModeSection from "./components/GameMode/GameModeSection";
 import Footer from "./components/Footer";
 import { RecentActivity } from "./components/RecentActivity";
 import { mockActivities } from "./models/recentActivity";
@@ -26,8 +25,7 @@ const Home = () => (
     <AboutUsSection />
     <ContributorsSection />
     <FaqsSection />
-    <GameModeDescription />
-    <GameModesList />
+    <GameModeSection />
     <RecentActivity activities={mockActivities} />
     <Footer />
   </>
