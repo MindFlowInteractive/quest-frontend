@@ -86,6 +86,7 @@ const ContributorsSection: React.FC = () => {
 
   return (
     <section
+      id="contributors"
       ref={sectionRef}
       className="bg-[#121212] py-16 md:py-24 text-white overflow-hidden"
       aria-labelledby="contributors-title"
@@ -93,9 +94,8 @@ const ContributorsSection: React.FC = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div
-          className={`mb-12 md:mb-16 text-center transition-all duration-700 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`mb-12 md:mb-16 text-center transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <h2
             id="contributors-title"
@@ -107,9 +107,8 @@ const ContributorsSection: React.FC = () => {
 
         {/* Accordion Cards Container */}
         <div
-          className={`relative transition-all duration-1000 delay-300 ${
-            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
-          }`}
+          className={`relative transition-all duration-1000 delay-300 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+            }`}
         >
           {/* Horizontal Scrollable Container */}
           <div
@@ -123,11 +122,10 @@ const ContributorsSection: React.FC = () => {
               {contributors.map((person, index) => (
                 <div
                   key={person.id}
-                  className={`group shrink-0 transition-all duration-500 contributor-float ${
-                    isVisible
+                  className={`group shrink-0 transition-all duration-500 contributor-float ${isVisible
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-16"
-                  }`}
+                    }`}
                   style={{
                     transitionDelay: `${index * 150 + 400}ms`,
                     animationDelay: `${index * 0.5}s`,
@@ -162,11 +160,10 @@ const ContributorsSection: React.FC = () => {
 
                     {/* Contributor info - left aligned */}
                     <div
-                      className={`text-left mt-6 transition-all duration-500 ${
-                        isVisible
+                      className={`text-left mt-6 transition-all duration-500 ${isVisible
                           ? "opacity-100 translate-y-0"
                           : "opacity-0 translate-y-4"
-                      }`}
+                        }`}
                       style={{ transitionDelay: `${index * 150 + 600}ms` }}
                     >
                       <h3 className="text-sm md:text-base font-bold text-white group-hover:text-[#ca8a04] transition-colors duration-300">

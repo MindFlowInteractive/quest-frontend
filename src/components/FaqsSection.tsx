@@ -60,9 +60,9 @@ const FaqsSection = () => {
   };
 
   return (
-    <section className="w-full bg-black py-16 md:py-24">
+    <section id="faqs" className="w-full bg-black py-16 md:py-24">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        
+
         {/* FAQ heading */}
         <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-10 md:mb-14">
           FAQs
@@ -82,9 +82,8 @@ const FaqsSection = () => {
 
                 {/* Triangle Icon */}
                 <svg
-                  className={`w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white transform transition-transform duration-300 ${
-                    openIds.includes(faq.id) ? "rotate-180" : "rotate-0"
-                  }`}
+                  className={`w-5 h-5 md:w-6 md:h-6 lg:w-7 lg:h-7 text-white transform transition-transform duration-300 ${openIds.includes(faq.id) ? "rotate-180" : "rotate-0"
+                    }`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -94,9 +93,8 @@ const FaqsSection = () => {
 
               {/* Answers */}
               <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  openIds.includes(faq.id) ? "max-h-96 py-4" : "max-h-0"
-                }`}
+                className={`overflow-hidden transition-all duration-300 ${openIds.includes(faq.id) ? "max-h-96 py-4" : "max-h-0"
+                  }`}
               >
                 <p className="text-gray-300 lg:text-md">{faq.answer}</p>
               </div>

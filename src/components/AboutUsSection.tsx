@@ -1,6 +1,7 @@
 const AboutUsSection = () => {
   return (
     <section
+      id="about"
       className="bg-[#121212] py-16 md:py-24 text-white"
       aria-labelledby="about-us-title"
     >
