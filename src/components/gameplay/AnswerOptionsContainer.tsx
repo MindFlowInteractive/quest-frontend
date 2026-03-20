@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AnswerOption from './AnswerOption';
 
 export type AnswerState = {
@@ -8,7 +8,7 @@ export type AnswerState = {
 };
 
 interface AnswerOptionsContainerProps {
-  answers: any[]; 
+  answers: AnswerState[];
   onAnswerSelect?: (index: number) => void;
   disabled?: boolean;
 }
@@ -20,10 +20,6 @@ const AnswerOptionsContainer: React.FC<AnswerOptionsContainerProps> = ({
 }) => {
 
   const [localSelectedIndex, setLocalSelectedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    setLocalSelectedIndex(null);
-  }, [answers]);
 
   const handlePress = (index: number) => {
     if (disabled || localSelectedIndex !== null) return;

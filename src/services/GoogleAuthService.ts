@@ -20,7 +20,14 @@ export const GoogleAuthService = {
         return { success: false, error: "No ID token received from Google." };
       }
 
-      const decoded: any = jwtDecode(credential);
+      interface DecodedToken {
+        email: string;
+        name: string;
+        picture: string;
+        sub: string;
+        exp: number;
+      }
+      const decoded = jwtDecode<DecodedToken>(credential);
       
       // Security Check: Is the token expired?
       const currentTime = Date.now() / 1000;
