@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronDown, Calendar, Clock } from 'lucide-react';
+import { ChevronDown, Calendar, Clock, Gamepad2, Timer, Zap, Monitor, Accessibility } from 'lucide-react';
 import arrowLeft from '../assets/arrow-left.svg';
 import ProfileForm from './ProfileForm';
 
@@ -34,6 +34,8 @@ const Toggle = ({ label, checked, onChange, id }: ToggleProps) => (
 
 type ThemeOption = 'dark' | 'light' | 'system';
 type TabOption = 'Profile' | 'Account' | 'Game setting';
+type DifficultyOption = 'easy' | 'medium' | 'hard';
+type AnimationSpeedOption = 'slow' | 'normal' | 'fast';
 
 interface NotificationState {
     schedule: string;
@@ -44,11 +46,27 @@ interface ReminderState {
     time: string;
 }
 
+interface GameSettingsState {
+    preferredMode: string;
+    difficulty: DifficultyOption;
+    countdownTimer: boolean;
+    timeWarning: boolean;
+    lifelineCallFriend: boolean;
+    lifeline5050: boolean;
+    lifelineAudience: boolean;
+    autoAdvance: boolean;
+    showAnswerFeedback: boolean;
+    animationSpeed: AnimationSpeedOption;
+    reduceMotion: boolean;
+    largeText: boolean;
+}
+
 interface SettingsState {
     theme: ThemeOption;
     notifications: NotificationState;
     reminder: ReminderState;
     volume: number;
+    game: GameSettingsState;
 }
 
 const AccountSettings = () => {
@@ -66,6 +84,20 @@ const AccountSettings = () => {
             notifications: { schedule: 'Daily' },
             reminder: { day: 'Monday', time: '14:30' },
             volume: 37,
+            game: {
+                preferredMode: 'classic',
+                difficulty: 'medium',
+                countdownTimer: true,
+                timeWarning: true,
+                lifelineCallFriend: true,
+                lifeline5050: true,
+                lifelineAudience: true,
+                autoAdvance: false,
+                showAnswerFeedback: true,
+                animationSpeed: 'normal',
+                reduceMotion: false,
+                largeText: false,
+            },
         };
     });
 
@@ -90,6 +122,13 @@ const AccountSettings = () => {
 
     const handleNotificationChange = (val: string) => {
         setState((prev) => ({ ...prev, notifications: { ...prev.notifications, schedule: val } }));
+    };
+
+    const handleGameSettingChange = <K extends keyof GameSettingsState>(
+        key: K,
+        value: GameSettingsState[K]
+    ) => {
+        setState((prev) => ({ ...prev, game: { ...prev.game, [key]: value } }));
     };
 
     return (
@@ -135,12 +174,224 @@ const AccountSettings = () => {
                     </section>
                 )}
 
-                {/* GAME SETTING TAB (Placeholder) */}
+                {/* GAME SETTING TAB */}
                 {activeTab === 'Game setting' && (
-                    <section className="text-center py-20">
-                        <h2 className="text-2xl font-medium mb-6 text-[#CFFDED]">Game Settings</h2>
-                        <p className="text-[#9CA3AF]">Game specific settings will appear here.</p>
-                    </section>
+                    <div className="space-y-12">
+
+                        {/* ── Gameplay ─────────────────────────────── */}
+                        <section aria-labelledby="game-gameplay-heading">
+                            <div className="flex items-center gap-3 mb-6">
+                                <Gamepad2 className="w-5 h-5 text-[#F9BC07]" />
+                                <h2 id="game-gameplay-heading" className="text-2xl font-medium text-[#CFFDED]">Gameplay</h2>
+                            </div>
+
+                            <div className="space-y-6">
+                                {/* Preferred Game Mode */}
+                                <div className="space-y-2">
+                                    <label className="text-[#717171] text-lg block">Preferred Game Mode</label>
+                                    <div className="relative group">
+                                        <select
+                                            value={state.game.preferredMode}
+                                            onChange={(e) => handleGameSettingChange('preferredMode', e.target.value)}
+                                            className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
+                                        >
+                                            <option value="classic">Classic Mode</option>
+                                            <option value="challenge">Challenge Mode</option>
+                                            <option value="daily">Daily Challenge</option>
+                                            <option value="timed-blitz">Timed Blitz</option>
+                                            <option value="puzzle">Puzzle Mode</option>
+                                            <option value="practice">Practice Mode</option>
+                                            <option value="adventure">Adventure Mode</option>
+                                            <option value="endless">Endless Mode</option>
+                                        </select>
+                                        <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 text-[#717171] pointer-events-none group-hover:text-[#F9BC07] transition-colors" />
+                                    </div>
+                                </div>
+
+                                {/* Difficulty */}
+                                <div className="space-y-3">
+                                    <label className="text-[#717171] text-lg block">Difficulty Level</label>
+                                    <div className="flex gap-3">
+                                        {(['easy', 'medium', 'hard'] as DifficultyOption[]).map((level) => (
+                                            <button
+                                                key={level}
+                                                onClick={() => handleGameSettingChange('difficulty', level)}
+                                                className={`
+                                                    flex-1 py-2.5 rounded-md text-sm font-medium capitalize border transition-all
+                                                    ${state.game.difficulty === level
+                                                        ? 'bg-[#F9BC07] border-[#F9BC07] text-black'
+                                                        : 'bg-transparent border-[#353536] text-[#9CA3AF] hover:border-[#F9BC07] hover:text-white'
+                                                    }
+                                                `}
+                                            >
+                                                {level}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr className="border-[#353536]" />
+
+                        {/* ── Timer ────────────────────────────────── */}
+                        <section aria-labelledby="game-timer-heading">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Timer className="w-5 h-5 text-[#F9BC07]" />
+                                <h2 id="game-timer-heading" className="text-2xl font-medium text-[#CFFDED]">Timer</h2>
+                            </div>
+                            <p className="text-[#717171] text-sm mb-4">Controls the in-game countdown clock behaviour.</p>
+
+                            <div className="space-y-1 divide-y divide-[#353536]">
+                                <Toggle
+                                    id="timer-countdown"
+                                    label="Enable Countdown Timer"
+                                    checked={state.game.countdownTimer}
+                                    onChange={(v) => handleGameSettingChange('countdownTimer', v)}
+                                />
+                                <Toggle
+                                    id="timer-warning"
+                                    label="Time Warning Alert (30 s remaining)"
+                                    checked={state.game.timeWarning}
+                                    onChange={(v) => handleGameSettingChange('timeWarning', v)}
+                                />
+                            </div>
+                        </section>
+
+                        <hr className="border-[#353536]" />
+
+                        {/* ── Lifelines ────────────────────────────── */}
+                        <section aria-labelledby="game-lifelines-heading">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Zap className="w-5 h-5 text-[#F9BC07]" />
+                                <h2 id="game-lifelines-heading" className="text-2xl font-medium text-[#CFFDED]">Lifelines</h2>
+                            </div>
+                            <p className="text-[#717171] text-sm mb-4">Toggle which lifelines are available during a game session.</p>
+
+                            <div className="space-y-1 divide-y divide-[#353536]">
+                                <Toggle
+                                    id="lifeline-call"
+                                    label="Call a Friend"
+                                    checked={state.game.lifelineCallFriend}
+                                    onChange={(v) => handleGameSettingChange('lifelineCallFriend', v)}
+                                />
+                                <Toggle
+                                    id="lifeline-5050"
+                                    label="50 : 50 (remove two wrong options)"
+                                    checked={state.game.lifeline5050}
+                                    onChange={(v) => handleGameSettingChange('lifeline5050', v)}
+                                />
+                                <Toggle
+                                    id="lifeline-audience"
+                                    label="Ask the Audience"
+                                    checked={state.game.lifelineAudience}
+                                    onChange={(v) => handleGameSettingChange('lifelineAudience', v)}
+                                />
+                            </div>
+                        </section>
+
+                        <hr className="border-[#353536]" />
+
+                        {/* ── Display ──────────────────────────────── */}
+                        <section aria-labelledby="game-display-heading">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Monitor className="w-5 h-5 text-[#F9BC07]" />
+                                <h2 id="game-display-heading" className="text-2xl font-medium text-[#CFFDED]">Display</h2>
+                            </div>
+                            <p className="text-[#717171] text-sm mb-4">Adjust how the gameplay UI behaves and looks.</p>
+
+                            <div className="space-y-1 divide-y divide-[#353536]">
+                                <Toggle
+                                    id="display-auto-advance"
+                                    label="Auto-advance after correct answer"
+                                    checked={state.game.autoAdvance}
+                                    onChange={(v) => handleGameSettingChange('autoAdvance', v)}
+                                />
+                                <Toggle
+                                    id="display-feedback"
+                                    label="Show answer feedback (green / red highlight)"
+                                    checked={state.game.showAnswerFeedback}
+                                    onChange={(v) => handleGameSettingChange('showAnswerFeedback', v)}
+                                />
+                            </div>
+
+                            {/* Animation Speed */}
+                            <div className="space-y-3 pt-6">
+                                <label className="text-[#717171] text-lg block">Animation Speed</label>
+                                <div className="flex gap-3">
+                                    {(['slow', 'normal', 'fast'] as AnimationSpeedOption[]).map((speed) => (
+                                        <button
+                                            key={speed}
+                                            onClick={() => handleGameSettingChange('animationSpeed', speed)}
+                                            className={`
+                                                flex-1 py-2.5 rounded-md text-sm font-medium capitalize border transition-all
+                                                ${state.game.animationSpeed === speed
+                                                    ? 'bg-[#F9BC07] border-[#F9BC07] text-black'
+                                                    : 'bg-transparent border-[#353536] text-[#9CA3AF] hover:border-[#F9BC07] hover:text-white'
+                                                }
+                                            `}
+                                        >
+                                            {speed}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr className="border-[#353536]" />
+
+                        {/* ── Accessibility ────────────────────────── */}
+                        <section aria-labelledby="game-a11y-heading">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Accessibility className="w-5 h-5 text-[#F9BC07]" />
+                                <h2 id="game-a11y-heading" className="text-2xl font-medium text-[#CFFDED]">Accessibility</h2>
+                            </div>
+                            <p className="text-[#717171] text-sm mb-4">Make the game more comfortable to play.</p>
+
+                            <div className="space-y-1 divide-y divide-[#353536]">
+                                <Toggle
+                                    id="a11y-reduce-motion"
+                                    label="Reduce Motion"
+                                    checked={state.game.reduceMotion}
+                                    onChange={(v) => handleGameSettingChange('reduceMotion', v)}
+                                />
+                                <Toggle
+                                    id="a11y-large-text"
+                                    label="Large Text Mode"
+                                    checked={state.game.largeText}
+                                    onChange={(v) => handleGameSettingChange('largeText', v)}
+                                />
+                            </div>
+                        </section>
+
+                        {/* Reset to defaults */}
+                        <div className="pt-4">
+                            <button
+                                onClick={() =>
+                                    setState((prev) => ({
+                                        ...prev,
+                                        game: {
+                                            preferredMode: 'classic',
+                                            difficulty: 'medium',
+                                            countdownTimer: true,
+                                            timeWarning: true,
+                                            lifelineCallFriend: true,
+                                            lifeline5050: true,
+                                            lifelineAudience: true,
+                                            autoAdvance: false,
+                                            showAnswerFeedback: true,
+                                            animationSpeed: 'normal',
+                                            reduceMotion: false,
+                                            largeText: false,
+                                        },
+                                    }))
+                                }
+                                className="border border-[#353536] text-[#9CA3AF] hover:border-[#F9BC07] hover:text-white transition-colors py-2.5 px-6 rounded-md text-sm font-medium"
+                            >
+                                Reset to Defaults
+                            </button>
+                        </div>
+                    </div>
                 )}
 
                 {/* ACCOUNT TAB (Existing Content) */}
