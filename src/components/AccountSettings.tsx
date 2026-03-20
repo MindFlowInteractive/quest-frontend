@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronDown, Calendar, Clock, Gamepad2, Timer, Zap, Monitor, Accessibility } from 'lucide-react';
 import arrowLeft from '../assets/arrow-left.svg';
 import ProfileForm from './ProfileForm';
+import { DeleteAccountModal } from './modals/DeleteAccountModal';
+import { AuthService } from '../services/AuthService';
 
 interface ToggleProps {
     label: string;
@@ -70,6 +73,9 @@ interface SettingsState {
 }
 
 const AccountSettings = () => {
+    const navigate = useNavigate();
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [state, setState] = useState<SettingsState>(() => {
         const saved = localStorage.getItem('quest_account_settings');
         if (saved) {
@@ -542,14 +548,28 @@ const AccountSettings = () => {
 
                         <button
                             className="bg-[#E94B25] hover:bg-[#D43A15] text-white font-semibold py-3 px-8 rounded-md transition-colors focus:ring-2 focus:ring-[#E94B25] focus:ring-offset-2 focus:ring-offset-[#141516]"
-                            onClick={() => {
-                                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                                    console.log('Account deletion initiated');
-                                }
-                            }}
+                            onClick={() => setShowDeleteModal(true)}
                         >
                             Delete
                         </button>
+
+                        <DeleteAccountModal
+                            isOpen={showDeleteModal}
+                            isDeleting={isDeleting}
+                            onCancel={() => setShowDeleteModal(false)}
+                            onConfirm={async () => {
+                                setIsDeleting(true);
+                                try {
+                                    // Clear all persisted user data
+                                    AuthService.logout();
+                                    localStorage.removeItem('quest_account_settings');
+                                    navigate('/sign-in');
+                                } catch (err) {
+                                    console.error('Account deletion error:', err);
+                                    setIsDeleting(false);
+                                }
+                            }}
+                        />
                     </div>
                 </>
             )}
