@@ -15,6 +15,7 @@ import { mockActivities } from "./models/recentActivity";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import HowToPlay from './components/HowToPlay';
 import { GetStarted } from './pages/GetStarted';
+import ToastViewport from './components/toasts/ToastViewport';
 
 
 const Home = () => (
@@ -38,6 +39,7 @@ function App() {
   return (
     <>
       {showNavBar && <GameplayNavbar />}
+      <ToastViewport />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
