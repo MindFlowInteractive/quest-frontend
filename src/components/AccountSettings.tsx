@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { ChevronDown, Calendar, Clock } from 'lucide-react';
 import arrowLeft from '../assets/arrow-left.svg';
 import ProfileForm from './ProfileForm';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { setNotificationSchedule } from '../features/preferences/preferencesSlice';
 
 interface ToggleProps {
     label: string;
@@ -52,6 +54,9 @@ interface SettingsState {
 }
 
 const AccountSettings = () => {
+    const dispatch = useAppDispatch();
+    const notificationSchedule = useAppSelector((s) => s.preferences.notificationSchedule);
+
     const [state, setState] = useState<SettingsState>(() => {
         const saved = localStorage.getItem('quest_account_settings');
         if (saved) {
@@ -89,6 +94,10 @@ const AccountSettings = () => {
     };
 
     const handleNotificationChange = (val: string) => {
+        if (val === 'Daily' || val === 'Weekly' || val === 'Monthly' || val === 'Never') {
+            dispatch(setNotificationSchedule(val));
+        }
+
         setState((prev) => ({ ...prev, notifications: { ...prev.notifications, schedule: val } }));
     };
 
@@ -153,7 +162,7 @@ const AccountSettings = () => {
                                 <label className="text-[#717171] text-lg block">Notification Schedule</label>
                                 <div className="relative group">
                                     <select
-                                        value={state.notifications.schedule}
+                                        value={notificationSchedule}
                                         onChange={(e) => handleNotificationChange(e.target.value)}
                                         className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
                                     >
