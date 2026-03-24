@@ -1,10 +1,10 @@
-import { Routes, Route } from "react-router-dom"
-import NavBar from "./components/Navbar"
+import { Routes, Route, useLocation } from "react-router-dom"; // ✅ import useLocation
+import NavBar from "./components/Navbar";
 
-import Home from "./pages/Home"
-import Store from "./pages/Store"
-import GameMode from "./pages/GameMode"
-import Settings from "./pages/Settings"
+import Home from "./pages/Home";
+import Store from "./pages/Store";
+import GameMode from "./pages/GameMode";
+import Settings from "./pages/Settings";
 
 function App() {
   const location = useLocation();
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      <NavBar />
+      {showNavBar && <NavBar />}  {/* ✅ only show NavBar if not on /sign-in */}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -21,7 +21,7 @@ function App() {
         <Route path="/settings" element={<Settings />} />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
