@@ -1,7 +1,7 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from "react-router-dom";
 import HeroSection from "./components/HeroSection";
 import "./App.css";
-import GameplayNavbar from "./components/GameplayNavbar";
+// import GameplayNavbar from "./components/GameplayNavbar";
 import FaqsSection from "./components/FaqsSection";
 import ContributorsSection from "./components/ContributorsSection";
 import AboutUsSection from "./components/AboutUsSection";
@@ -17,24 +17,27 @@ import HowToPlay from './components/HowToPlay';
 import { GetStarted } from './pages/GetStarted';
 import ToastViewport from './components/toasts/ToastViewport';
 
+import HowToPlay from "./components/HowToPlay";
+import { GetStarted } from "./pages/GetStarted";
+import Navbar from "./components/Navbar";
 
 const Home = () => (
-  <>
-    <HeroSection />
-    <HowToPlay />
-    <WhyShouldYouPlaySection />
-    <AboutUsSection />
-    <ContributorsSection />
-    <FaqsSection />
-    <GameModeSection />
-    <RecentActivity activities={mockActivities} />
-    <Footer />
-  </>
+    <>
+        <HeroSection />
+        <HowToPlay />
+        <WhyShouldYouPlaySection />
+        <AboutUsSection />
+        <ContributorsSection />
+        <FaqsSection />
+        <GameModeSection />
+        <RecentActivity activities={mockActivities} />
+        <Footer />
+    </>
 );
 
 function App() {
-  const location = useLocation();
-  const showNavBar = location.pathname !== '/sign-in';
+    const location = useLocation();
+    const showNavBar = location.pathname !== "/sign-in";
 
   return (
     <>
@@ -49,6 +52,18 @@ function App() {
       </Routes>
     </>
   );
+    return (
+        <>
+            {showNavBar && <Navbar />}
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/sign-in" element={<SignIn />} />
+                <Route path="/settings" element={<AccountSettings />} />
+                <Route path="/leaderboard" element={<LeaderboardPage />} />
+                <Route path="/get-started" element={<GetStarted />} />
+            </Routes>
+        </>
+    );
 }
 
 export default App;
