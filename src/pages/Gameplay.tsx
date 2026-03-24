@@ -3,8 +3,11 @@ import GameHeader from '../components/gameplay/GameHeader';
 import GameLevelContainer from '../components/gameplay/GameLevelContainer';
 import QuestionContainer from '../components/gameplay/QuestionContainer';
 import { MOCK_GAME_DATA } from '../data/mockGameData';
+import { useAppDispatch } from '../hooks';
+import { addNotification } from '../features/notifications/notificationsSlice';
 
 const Gameplay: React.FC = () => {
+  const dispatch = useAppDispatch();
   const [currentLevel, setCurrentLevel] = useState(1);
   const [isGameOver, setIsGameOver] = useState(false);
 
@@ -21,7 +24,13 @@ const Gameplay: React.FC = () => {
       if (currentLevel < 15) {
         setCurrentLevel(prev => prev + 1);
       } else {
-        alert("CONGRATULATIONS! You are a LogiQuest Millionaire!");
+        dispatch(
+          addNotification({
+            type: 'success',
+            title: 'Congratulations!',
+            message: 'You are a LogiQuest Millionaire!',
+          }),
+        );
       }
     } else {
       setIsGameOver(true);

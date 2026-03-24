@@ -27,7 +27,7 @@ export default function SignInPage() {
           setError(result.error || "Authentication failed.");
         }
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected system error occurred.");
     } finally {
       setIsLoading(false);
