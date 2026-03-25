@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronDown, Calendar, Clock } from 'lucide-react';
 import arrowLeft from '../assets/arrow-left.svg';
 import ProfileForm from './ProfileForm';
@@ -54,6 +55,7 @@ interface SettingsState {
 }
 
 const AccountSettings = () => {
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const notificationSchedule = useAppSelector((s) => s.preferences.notificationSchedule);
 
@@ -127,7 +129,7 @@ const AccountSettings = () => {
                         </nav>
                     </div>
 
-                    <button className="hidden md:flex items-center gap-2 text-[#9CA3AF] hover:text-white transition-colors group">
+                    <button onClick={() => navigate(-1)} className="hidden md:flex items-center gap-2 text-[#9CA3AF] hover:text-white transition-colors group">
                         <img src={arrowLeft} alt="arrow-left" className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
                         <span className="text-lg tracking-wide">BACK</span>
                     </button>

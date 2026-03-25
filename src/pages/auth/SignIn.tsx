@@ -75,13 +75,14 @@ export default function SignIn() {
             className="h-10 w-auto object-contain"
           />
         </Link>
-        <Link
-          to="/"
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-[#757575] cursor-pointer transition-colors"
         >
           <img src={arrowLeft} alt="" className="w-5 h-5" />
           <span className="uppercase text-sm font-medium">Back</span>
-        </Link>
+        </button>
       </header>
 
       {/* Main content */}
