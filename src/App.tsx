@@ -12,13 +12,11 @@ import Footer from "./components/Footer";
 import { RecentActivity } from "./components/RecentActivity";
 import { mockActivities } from "./models/recentActivity";
 import LeaderboardPage from "./pages/LeaderboardPage";
-import HowToPlay from './components/HowToPlay';
-import { GetStarted } from './pages/GetStarted';
-import ToastViewport from './components/toasts/ToastViewport';
-
 import HowToPlay from "./components/HowToPlay";
 import { GetStarted } from "./pages/GetStarted";
+import ToastViewport from "./components/toasts/ToastViewport";
 import Navbar from "./components/Navbar";
+import GameplayNavbar from "./components/GameplayNavbar";
 
 const Home = () => (
   <>
@@ -48,22 +46,6 @@ function App() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/settings" element={<AccountSettings />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
-         <Route path="/get-started" element={<GetStarted />} />
-      </Routes>
-    </>
-  );
-    return (
-        <>
-            {showNavBar && <Navbar />}
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/sign-in" element={<SignIn />} />
-                <Route path="/settings" element={<AccountSettings />} />
-                <Route path="/leaderboard" element={<LeaderboardPage />} />
-                <Route path="/get-started" element={<GetStarted />} />
-            </Routes>
-        </>
-    );
         <Route path="/get-started" element={<GetStarted />} />
       </Routes>
     </>
