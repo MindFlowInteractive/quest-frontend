@@ -6,6 +6,7 @@ import ProfileForm from './ProfileForm';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setNotificationSchedule } from '../features/preferences/preferencesSlice';
 import { DeleteAccountModal } from './modals/DeleteAccountModal';
+import { useThemeStore } from '../theme/themeStore';
 
 interface ToggleProps {
     label: string;
@@ -49,7 +50,6 @@ interface ReminderState {
 }
 
 interface SettingsState {
-    theme: ThemeOption;
     notifications: NotificationState;
     reminder: ReminderState;
     volume: number;
@@ -59,6 +59,9 @@ const AccountSettings = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const notificationSchedule = useAppSelector((s) => s.preferences.notificationSchedule);
+
+    const themePreference = useThemeStore((s) => s.preference);
+    const setThemePreference = useThemeStore((s) => s.setPreference);
 
     const [state, setState] = useState<SettingsState>(() => {
         const saved = localStorage.getItem('quest_account_settings');
@@ -70,7 +73,6 @@ const AccountSettings = () => {
             }
         }
         return {
-            theme: 'dark',
             notifications: { schedule: 'Daily' },
             reminder: { day: 'Monday', time: '14:30' },
             volume: 37,
@@ -82,15 +84,10 @@ const AccountSettings = () => {
 
     useEffect(() => {
         localStorage.setItem('quest_account_settings', JSON.stringify(state));
-        if (state.theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else if (state.theme === 'light') {
-            document.documentElement.classList.remove('dark');
-        }
     }, [state]);
 
     const handleThemeChange = (newTheme: ThemeOption) => {
-        setState((prev) => ({ ...prev, theme: newTheme }));
+        setThemePreference(newTheme);
     };
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -213,19 +210,19 @@ const AccountSettings = () => {
                                 <Toggle
                                     id="theme-dark"
                                     label="Dark Mode"
-                                    checked={state.theme === 'dark'}
+                                    checked={themePreference === 'dark'}
                                     onChange={() => handleThemeChange('dark')}
                                 />
                                 <Toggle
                                     id="theme-light"
                                     label="Light Mode"
-                                    checked={state.theme === 'light'}
+                                    checked={themePreference === 'light'}
                                     onChange={() => handleThemeChange('light')}
                                 />
                                 <Toggle
                                     id="theme-system"
                                     label="System Mode"
-                                    checked={state.theme === 'system'}
+                                    checked={themePreference === 'system'}
                                     onChange={() => handleThemeChange('system')}
                                 />
                             </div>
