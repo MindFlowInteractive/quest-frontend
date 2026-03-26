@@ -5,6 +5,7 @@ import arrowLeft from '../assets/arrow-left.svg';
 import ProfileForm from './ProfileForm';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setNotificationSchedule } from '../features/preferences/preferencesSlice';
+import { DeleteAccountModal } from './modals/DeleteAccountModal';
 import { useThemeStore } from '../theme/themeStore';
 
 interface ToggleProps {
@@ -79,6 +80,7 @@ const AccountSettings = () => {
     });
 
     const [activeTab, setActiveTab] = useState<TabOption>('Account');
+    const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         localStorage.setItem('quest_account_settings', JSON.stringify(state));
@@ -230,7 +232,7 @@ const AccountSettings = () => {
                             <h2 id="sound-heading" className="text-2xl font-medium mb-8 text-[#CFFDED]">Sound</h2>
 
                             <div className="flex items-center gap-6 pb-4">
-                                <label htmlFor="volume-slider" className="text-[#9CA3AF] text-lg min-w-[60px]">Volume</label>
+                                <label htmlFor="volume-slider" className="text-[#9CA3AF] text-lg min-w-15">Volume</label>
 
                                 <div className="relative flex-1 h-1.5 bg-[#353536] rounded-full group cursor-pointer">
                                     <div
@@ -299,17 +301,15 @@ const AccountSettings = () => {
 
                         <button
                             className="bg-[#E94B25] hover:bg-[#D43A15] text-white font-semibold py-3 px-8 rounded-md transition-colors focus:ring-2 focus:ring-[#E94B25] focus:ring-offset-2 focus:ring-offset-[#141516]"
-                            onClick={() => {
-                                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                                    console.log('Account deletion initiated');
-                                }
-                            }}
+                            onClick={()=> setOpenModal(true)}
                         >
                             Delete
                         </button>
                     </div>
                 </>
             )}
+
+            <DeleteAccountModal setCloseModal={setOpenModal} openModal={openModal} />
         </div>
     );
 };
