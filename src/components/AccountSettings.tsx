@@ -9,13 +9,13 @@ import { DeleteAccountModal } from './modals/DeleteAccountModal';
 import { useThemeStore } from '../theme/themeStore';
 
 interface ToggleProps {
-    label: string;
-    checked: boolean;
-    onChange: (checked: boolean) => void;
-    id: string;
+    label?: string;
+    checked?: boolean;
+    onChange?: (checked: boolean) => void;
+    id?: string;
 }
 
-const Toggle = ({ label, checked, onChange, id }: ToggleProps) => (
+const Toggle = ({ label, checked, onChange=() => {}, id }: ToggleProps) => (
     <div className="flex items-center justify-between py-4">
         <label htmlFor={id} className="text-[#9CA3AF] text-lg cursor-pointer select-none">
             {label}
@@ -80,6 +80,8 @@ const AccountSettings = () => {
     });
 
     const [activeTab, setActiveTab] = useState<TabOption>('Account');
+  
+    
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
@@ -147,10 +149,98 @@ const AccountSettings = () => {
 
                 {/* GAME SETTING TAB (Placeholder) */}
                 {activeTab === 'Game setting' && (
-                    <section className="text-center py-20">
-                        <h2 className="text-2xl font-medium mb-6 text-[#CFFDED]">Game Settings</h2>
-                        <p className="text-[#9CA3AF]">Game specific settings will appear here.</p>
-                    </section>
+                   <section aria-labelledby="game-setting">
+                            <h2 id="notification-heading" className="text-2xl font-medium mb-6 text-[#CFFDED]">Gameplay</h2>
+
+                            <div className="space-y-2">
+                                <div className="text-[#717171] text-lg block">Preferred Game Mode</div>
+                                <div className="relative group">
+                                    <select
+                                        className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
+                                    >
+                                        <option value="classic-mode">Classic Mode</option>
+                                        <option value="Mode">Mode</option>
+                                        <option value="Mode">Mode</option>
+                                    
+                                    </select>
+                                    <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 text-[#717171] pointer-events-none group-hover:text-[#F9BC07] transition-colors" />
+                                </div>
+                            </div>
+
+                        <div className="text-[#717171] text-lg pt-4">Difficulty Level</div>
+                        <div className='pt-3 flex gap-3'>
+                            <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Easy</button>
+                            <button className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516]">Medium</button>
+                            <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Hard</button>
+                        </div>
+
+                        <hr className="border-[#353536] my-7" />
+                        <div>
+                            <h2 id="notification-heading" className="text-2xl font-medium mb-4 text-[#CFFDED]">Timer</h2>
+                            <div className="text-[#717171] text-sm">Control the in-game countdown clock behaviour</div>
+
+                            <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">  Enable Countdown Timer</span>
+                                     <Toggle checked/>
+                            </div>
+                            <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">Time Warning Alert (30 s remaining)</span>
+                                     <Toggle checked/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 id="notification-heading" className="pt-10 text-2xl font-medium mb-4 text-[#CFFDED]">Lifelines</h2>
+                            <div className="text-[#717171] text-sm">Toggle which lifelines are available during a game session</div>
+
+                            <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">Call a Friend</span>
+                                     <Toggle checked/>
+                            </div>
+                            <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">50 : 50 (remove two wrong options)</span>
+                                     <Toggle checked/>
+                            </div>
+                            <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">Ask the Audience</span>
+                                     <Toggle checked/>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 id="notification-heading" className="pt-10 text-2xl font-medium mb-4 text-[#CFFDED]">Display</h2>
+                            <div className="text-[#717171] text-sm">Adjust how the gameplay UI behaves and looks</div>
+
+                            <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">Auto-advance after correct answer</span>
+                                     <Toggle checked/>
+                            </div>
+                            <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">Show answer feedback (green / red highlight)</span>
+                                     <Toggle checked={false} />
+                            </div>
+                            <div className="text-[#717171] text-lg pt-8">Animation Speed</div>
+                            <div className='pt-3 flex gap-3'>
+                                <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Slow</button>
+                                <button className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516]">Normal</button>
+                                <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Fast</button>
+                        </div>
+                        </div>
+                        <div>
+                            <h2 id="notification-heading" className="pt-10 text-2xl font-medium mb-4 text-[#CFFDED]">Accessibility</h2>
+                            <div className="text-[#717171] text-sm">Make the game more comfortable to play</div>
+
+                            <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">Reduce Motion</span>
+                                     <Toggle checked/>
+                            </div>
+                            <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
+                                <span className="text-[#9CA3AF] text-lg">Large Text Mode</span>
+                                     <Toggle checked={false} />
+                            </div>
+                        </div>
+                        <button className="border border-[#353536] rounded-md w-full md:w-50  h-12 mt-15 text-[#717171]">Reset to Defaults</button>
+                        </section>
                 )}
 
                 {/* ACCOUNT TAB (Existing Content) */}
