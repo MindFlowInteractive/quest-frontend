@@ -1,7 +1,6 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from "react-router-dom";
 import HeroSection from "./components/HeroSection";
 import "./App.css";
-import GameplayNavbar from "./components/GameplayNavbar";
 import FaqsSection from "./components/FaqsSection";
 import ContributorsSection from "./components/ContributorsSection";
 import AboutUsSection from "./components/AboutUsSection";
@@ -13,10 +12,11 @@ import Footer from "./components/Footer";
 import { RecentActivity } from "./components/RecentActivity";
 import { mockActivities } from "./models/recentActivity";
 import LeaderboardPage from "./pages/LeaderboardPage";
-import HowToPlay from './components/HowToPlay';
-import { GetStarted } from './pages/GetStarted';
-import ToastViewport from './components/toasts/ToastViewport';
-
+import HowToPlay from "./components/HowToPlay";
+import { GetStarted } from "./pages/GetStarted";
+import ToastViewport from "./components/toasts/ToastViewport";
+import Navbar from "./components/Navbar";
+import GameplayNavbar from "./components/GameplayNavbar";
 
 const Home = () => (
   <>
@@ -34,18 +34,19 @@ const Home = () => (
 
 function App() {
   const location = useLocation();
-  const showNavBar = location.pathname !== '/sign-in';
+  const showNavBar = location.pathname !== "/sign-in";
 
   return (
     <>
       {showNavBar && <GameplayNavbar />}
       <ToastViewport />
+      {showNavBar && <Navbar />}  {/* Only show Navbar when NOT on /sign-in */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/settings" element={<AccountSettings />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
-         <Route path="/get-started" element={<GetStarted />} />
+        <Route path="/get-started" element={<GetStarted />} />
       </Routes>
     </>
   );

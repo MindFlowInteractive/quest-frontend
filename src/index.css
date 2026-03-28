@@ -2,22 +2,14 @@
 @import "tailwindcss";
 
 :root {
-  background-color: #141516;
-  color: #fff;
+  color: #213547;
+  background-color: #ffffff;
   font-family: "Prompt", sans-serif;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+html.dark :root {
+  background-color: #141516;
+  color: #fff;
 }
 
 @import "tailwindcss";

@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronDown, Calendar, Clock } from 'lucide-react';
 import arrowLeft from '../assets/arrow-left.svg';
 import ProfileForm from './ProfileForm';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { setNotificationSchedule } from '../features/preferences/preferencesSlice';
+import { DeleteAccountModal } from './modals/DeleteAccountModal';
+import { useThemeStore } from '../theme/themeStore';
 
 interface ToggleProps {
     label: string;
@@ -47,15 +50,18 @@ interface ReminderState {
 }
 
 interface SettingsState {
-    theme: ThemeOption;
     notifications: NotificationState;
     reminder: ReminderState;
     volume: number;
 }
 
 const AccountSettings = () => {
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const notificationSchedule = useAppSelector((s) => s.preferences.notificationSchedule);
+
+    const themePreference = useThemeStore((s) => s.preference);
+    const setThemePreference = useThemeStore((s) => s.setPreference);
 
     const [state, setState] = useState<SettingsState>(() => {
         const saved = localStorage.getItem('quest_account_settings');
@@ -67,7 +73,6 @@ const AccountSettings = () => {
             }
         }
         return {
-            theme: 'dark',
             notifications: { schedule: 'Daily' },
             reminder: { day: 'Monday', time: '14:30' },
             volume: 37,
@@ -75,18 +80,14 @@ const AccountSettings = () => {
     });
 
     const [activeTab, setActiveTab] = useState<TabOption>('Account');
+    const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         localStorage.setItem('quest_account_settings', JSON.stringify(state));
-        if (state.theme === 'dark') {
-            document.documentElement.classList.add('dark');
-        } else if (state.theme === 'light') {
-            document.documentElement.classList.remove('dark');
-        }
     }, [state]);
 
     const handleThemeChange = (newTheme: ThemeOption) => {
-        setState((prev) => ({ ...prev, theme: newTheme }));
+        setThemePreference(newTheme);
     };
 
     const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +128,7 @@ const AccountSettings = () => {
                         </nav>
                     </div>
 
-                    <button className="hidden md:flex items-center gap-2 text-[#9CA3AF] hover:text-white transition-colors group">
+                    <button onClick={() => navigate(-1)} className="hidden md:flex items-center gap-2 text-[#9CA3AF] hover:text-white transition-colors group">
                         <img src={arrowLeft} alt="arrow-left" className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
                         <span className="text-lg tracking-wide">BACK</span>
                     </button>
@@ -209,19 +210,19 @@ const AccountSettings = () => {
                                 <Toggle
                                     id="theme-dark"
                                     label="Dark Mode"
-                                    checked={state.theme === 'dark'}
+                                    checked={themePreference === 'dark'}
                                     onChange={() => handleThemeChange('dark')}
                                 />
                                 <Toggle
                                     id="theme-light"
                                     label="Light Mode"
-                                    checked={state.theme === 'light'}
+                                    checked={themePreference === 'light'}
                                     onChange={() => handleThemeChange('light')}
                                 />
                                 <Toggle
                                     id="theme-system"
                                     label="System Mode"
-                                    checked={state.theme === 'system'}
+                                    checked={themePreference === 'system'}
                                     onChange={() => handleThemeChange('system')}
                                 />
                             </div>
@@ -231,7 +232,7 @@ const AccountSettings = () => {
                             <h2 id="sound-heading" className="text-2xl font-medium mb-8 text-[#CFFDED]">Sound</h2>
 
                             <div className="flex items-center gap-6 pb-4">
-                                <label htmlFor="volume-slider" className="text-[#9CA3AF] text-lg min-w-[60px]">Volume</label>
+                                <label htmlFor="volume-slider" className="text-[#9CA3AF] text-lg min-w-15">Volume</label>
 
                                 <div className="relative flex-1 h-1.5 bg-[#353536] rounded-full group cursor-pointer">
                                     <div
@@ -300,17 +301,15 @@ const AccountSettings = () => {
 
                         <button
                             className="bg-[#E94B25] hover:bg-[#D43A15] text-white font-semibold py-3 px-8 rounded-md transition-colors focus:ring-2 focus:ring-[#E94B25] focus:ring-offset-2 focus:ring-offset-[#141516]"
-                            onClick={() => {
-                                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                                    console.log('Account deletion initiated');
-                                }
-                            }}
+                            onClick={()=> setOpenModal(true)}
                         >
                             Delete
                         </button>
                     </div>
                 </>
             )}
+
+            <DeleteAccountModal setCloseModal={setOpenModal} openModal={openModal} />
         </div>
     );
 };
