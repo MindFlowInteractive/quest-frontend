@@ -9,6 +9,7 @@ interface PreferencesState {
 
 const ACCOUNT_SETTINGS_STORAGE_KEY = 'quest_account_settings';
 const NOTIFICATION_SCHEDULE_STORAGE_KEY = 'quest_notification_schedule';
+const DEFAULT_NOTIFICATION_SCHEDULE: NotificationSchedule = 'Daily';
 
 const readScheduleFromAccountSettings = (): NotificationSchedule | null => {
   const raw = localStorage.getItem(ACCOUNT_SETTINGS_STORAGE_KEY);
@@ -36,7 +37,7 @@ const readScheduleFromLocalStorage = (): NotificationSchedule | null => {
 };
 
 const getInitialSchedule = (): NotificationSchedule => {
-  return readScheduleFromAccountSettings() ?? readScheduleFromLocalStorage() ?? 'Daily';
+  return readScheduleFromAccountSettings() ?? readScheduleFromLocalStorage() ?? DEFAULT_NOTIFICATION_SCHEDULE;
 };
 
 const initialState: PreferencesState = {
@@ -51,8 +52,11 @@ export const preferencesSlice = createSlice({
       state.notificationSchedule = action.payload;
       localStorage.setItem(NOTIFICATION_SCHEDULE_STORAGE_KEY, action.payload);
     },
+    resetPreferences: (state) => {
+      state.notificationSchedule = DEFAULT_NOTIFICATION_SCHEDULE;
+    },
   },
 });
 
-export const { setNotificationSchedule } = preferencesSlice.actions;
+export const { setNotificationSchedule, resetPreferences } = preferencesSlice.actions;
 export default preferencesSlice.reducer;

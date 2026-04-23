@@ -1,3 +1,5 @@
+import { clearSession } from "../session/clearSession";
+
 const API_BASE = import.meta.env.VITE_BACKEND_API_URL || "";
 
 export interface SignInCredentials {
@@ -71,7 +73,6 @@ export const AuthService = {
   },
 
   logout() {
-    localStorage.removeItem("quest_token");
-    localStorage.removeItem("quest_user");
+    clearSession();
   },
 };

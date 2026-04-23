@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode";
+import { clearSession } from "../session/clearSession";
 
 interface GoogleJwtPayload {
   email: string;
@@ -54,7 +55,7 @@ export const GoogleAuthService = {
   },
 
   logout() {
-    localStorage.removeItem("quest_user");
+    clearSession();
     window.location.reload();
   }
 };
