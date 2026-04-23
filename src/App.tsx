@@ -17,6 +17,8 @@ import { GetStarted } from "./pages/GetStarted";
 import ToastViewport from "./components/toasts/ToastViewport";
 import Navbar from "./components/Navbar";
 import GameplayNavbar from "./components/GameplayNavbar";
+import Store from "./pages/Store";
+import GameMode from "./pages/GameMode";
 
 const Home = () => (
   <>
@@ -47,6 +49,16 @@ function App() {
         <Route path="/settings" element={<AccountSettings />} />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/get-started" element={<GetStarted />} />
+        <Route path="/store" element={<Store />} />
+        <Route path="/game-mode" element={<GameMode />} />
+        <Route
+          path="*"
+          element={
+            <div className="h-screen flex items-center justify-center text-white text-2xl">
+              404 — Page Not Found
+            </div>
+          }
+        />
       </Routes>
     </>
   );
