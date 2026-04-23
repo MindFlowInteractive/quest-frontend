@@ -1,4 +1,4 @@
-import howtoplay from "../../public/howtoplay.png";
+const howtoplay = "/howtoplay.png";
 
 const HowToPlay = () => {
   return (

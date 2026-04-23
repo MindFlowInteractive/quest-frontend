@@ -79,7 +79,7 @@ export function DeleteAccountModal({
                 </h3>
 
                 <img
-                  src="/public/images/image-modal.svg"
+                  src="/images/image-modal.svg"
                   alt="image-modal"
                   width={221}
                   height={191}
@@ -94,7 +94,7 @@ export function DeleteAccountModal({
                     className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!"
                   >
                     <img
-                      src="/public/images/button-yes.svg"
+                      src="/images/button-yes.svg"
                       alt="image-modal"
                       width={208}
                       height={68}
@@ -105,7 +105,7 @@ export function DeleteAccountModal({
                     className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!"
                   >
                     <img
-                      src="/public/images/button-no.svg"
+                      src="/images/button-no.svg"
                       alt="image-modal"
                       width={208}
                       height={68}

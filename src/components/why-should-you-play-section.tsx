@@ -2,7 +2,7 @@ const WhyShouldYouPlaySection = () => {
   return (
     <section id="why-play" className="max-lg:p-4 max-lg:items-center max-lg:py-10 max-lg:flex-col flex items-end justify-between bg-[#033330] text-white">
       <div className="">
-        <img src="/public/images/quest-bg.png" alt="why-should-you-play" />
+        <img src="/images/quest-bg.png" alt="why-should-you-play" />
       </div>
 
       <div className="lg:pr-19 py-15 lg:py-50 max-w-229 lg:w-[70%]">

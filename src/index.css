@@ -2,14 +2,21 @@
 @import "tailwindcss";
 
 :root {
-  color: #213547;
-  background-color: #ffffff;
+  color: #e6fff6;
+  background-color: #01100f;
   font-family: "Prompt", sans-serif;
 }
 
-html.dark :root {
+html.dark {
   background-color: #141516;
   color: #fff;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: #01100f;
 }
 
 @import "tailwindcss";

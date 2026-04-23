@@ -34,13 +34,13 @@ const Home = () => (
 
 function App() {
   const location = useLocation();
-  const showNavBar = location.pathname !== "/sign-in";
+  const isSignInPage = location.pathname === "/sign-in";
+  const isHomePage = location.pathname === "/";
 
   return (
     <>
-      {showNavBar && <GameplayNavbar />}
+      {!isSignInPage && (isHomePage ? <GameplayNavbar /> : <Navbar />)}
       <ToastViewport />
-      {showNavBar && <Navbar />}  {/* Only show Navbar when NOT on /sign-in */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
