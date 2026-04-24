@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { clearSession } from "../../session/clearSession";
 
 type DeleteAccountModalProps = {
   openModal: boolean;
@@ -11,7 +12,7 @@ export function DeleteAccountModal({
   setCloseModal,
 }: DeleteAccountModalProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!openModal) return;
@@ -55,9 +56,11 @@ export function DeleteAccountModal({
     };
   }, [openModal, setCloseModal]);
 
-  if (redirect) {
-    return <Navigate to="/sign-in" replace={true} />;
-  }
+  const handleDeleteAccount = () => {
+    clearSession();
+    setCloseModal(false);
+    navigate("/sign-in", { replace: true });
+  };
 
   return (
     <>
@@ -87,10 +90,7 @@ export function DeleteAccountModal({
 
                 <div className="flex  gap-3 pt-8.25">
                   <button
-                    onClick={() => {
-                      setCloseModal(!openModal);
-                      setRedirect(true);
-                    }}
+                    onClick={handleDeleteAccount}
                     className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!"
                   >
                     <img
