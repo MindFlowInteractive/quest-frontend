@@ -1,25 +1,72 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { AuthService } from "../services/AuthService";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    AuthService.logout();
+    navigate("/sign-in");
+  };
+
+  const UtilityIcon = ({ 
+    src, 
+    alt, 
+    label, 
+    onClick, 
+    disabled = false, 
+    className = "" 
+  }: { 
+    src?: string; 
+    alt: string; 
+    label: string; 
+    onClick?: () => void; 
+    disabled?: boolean; 
+    className?: string;
+  }) => {
+    return (
+      <button
+        onClick={!disabled ? onClick : undefined}
+        disabled={disabled}
+        title={label}
+        aria-label={label}
+        className={`flex items-center gap-2 transition-all duration-200 outline-none
+          ${disabled ? "opacity-40 cursor-not-allowed grayscale" : "cursor-pointer hover:scale-110 active:scale-95 hover:brightness-125 focus-visible:ring-2 focus-visible:ring-[#F9BC07]"}
+          ${className}`}
+      >
+        <p className="hidden md:block">{label}</p>
+        {src ? (
+          <img src={src} alt={alt} className="h-6 w-auto object-contain" />
+        ) : (
+          <span className="h-6 w-6 flex items-center justify-center">{alt}</span>
+        )}
+      </button>
+    );
+  };
+
 
   return (
     <nav className="relative ">
       <div className=" px-5 md:px-10 py-5 w-full">
         <div className="flex justify-between items-center">
-          <div className="shrink-0 flex items-center gap-3 cursor-pointer">
+          <Link 
+            to="/" 
+            className="shrink-0 flex items-center gap-3 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] rounded-md px-1"
+            aria-label="LogiQuest Home"
+          >
             <img
               src="/logo.svg"
-              alt="LogiQuest"
+              alt="LogiQuest Logo"
               className="h-16 w-auto object-contain"
             />
             <span className="font-prompt font-bold text-[#CFFDED] text-[31px]">
-              <span>Logi</span>
+              <span className="text-[#F9BC07]">Logi</span>
               <span>Quest</span>
             </span>
-          </div>
+          </Link>
 
           {/* DESKTOP */}
           <div className="hidden xl:flex items-center ">
@@ -32,7 +79,7 @@ const NavBar = () => {
                     : "cursor-pointer hover:text-white transition-colors"
                 }
               >
-               Home
+                Home
               </NavLink>
               <NavLink
                 to="/store"
@@ -64,48 +111,67 @@ const NavBar = () => {
                     : "cursor-pointer hover:text-white transition-colors"
                 }
               >
-                Setting
+                Settings
               </NavLink>
 
-              <div className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
-                <p>Coins</p>
-                <img src="/coins.svg" alt="Coins" className="h-6 w-auto" />
-              </div>
+              <UtilityIcon
+                label="Coins"
+                src="/coins.svg"
+                alt="Coins"
+                onClick={() => navigate("/store")}
+              />
 
-              <div className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
-                <p>Call a friend</p>
-                <img src="/call.svg" alt="Call" className="h-6 w-auto" />
-              </div>
+              <UtilityIcon
+                label="Call a friend"
+                src="/call.svg"
+                alt="Call"
+                disabled
+              />
 
-              <div className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
-                <p>50:50</p>
-                <img src="/fiftyfifty.svg" alt="50:50" className="h-6 w-auto" />
-              </div>
+              <UtilityIcon
+                label="50:50"
+                src="/fiftyfifty.svg"
+                alt="50:50"
+                disabled
+              />
 
-              <div className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
-                <p>Audience</p>
+              <UtilityIcon
+                label="Audience"
+                src="/audience.svg"
+                alt="Audience"
+                disabled
+              />
+
+              <button
+                onClick={() => {}}
+                title="Notifications"
+                aria-label="Notifications"
+                className="mx-2 transition-all hover:scale-110 hover:brightness-125 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#F9BC07] outline-none"
+              >
+                <img src="/bell.svg" alt="Notifications" className="h-7 w-7" />
+              </button>
+
+              <button
+                onClick={handleLogout}
+                title="Logout"
+                aria-label="Logout"
+                className="transition-all hover:scale-110 hover:brightness-125 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#F9BC07] outline-none"
+              >
+                <img src="/logout.svg" alt="Logout" className="h-7" />
+              </button>
+
+              <button
+                onClick={() => navigate("/settings")}
+                title="Profile"
+                aria-label="Profile"
+                className="ml-2 transition-all hover:scale-105 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] rounded-full overflow-hidden"
+              >
                 <img
-                  src="/audience.svg"
-                  alt="Audience"
-                  className="h-6 w-auto"
+                  src="/manfists.png"
+                  alt="Profile"
+                  className="w-11 h-11 object-cover"
                 />
-              </div>
-
-              <img
-                src="/bell.svg"
-                alt="Bell"
-                className="h-7 w-7 mx-2 cursor-pointer"
-              />
-              <img
-                src="/logout.svg"
-                alt="Logout"
-                className="h-7 cursor-pointer"
-              />
-              <img
-                src="/manfists.png"
-                alt="Profile"
-                className="w-11 h-11 ml-2 object-cover"
-              />
+              </button>
             </div>
           </div>
 
@@ -137,35 +203,78 @@ const NavBar = () => {
             </NavLink>
 
             <NavLink to="/settings" onClick={() => setIsOpen(false)}>
-              Setting
+              Settings
             </NavLink>
 
             <div className="flex flex-col gap-6">
-              <div className="flex items-center gap-2">
-                <p>Coins</p>
-                <img src="/coins.png" className="h-6 w-auto" />
-              </div>
-              <div className="flex items-center gap-2">
-                <p>Call</p>
-                <img src="/call.png" className="h-6 w-auto" />
-              </div>
-              <div className="flex items-center gap-2">
-                <p>50:50</p>
-                <img src="/5050.png" className="h-6 w-auto" />
-              </div>
-              <div className="flex items-center gap-2">
-                <p>Audience</p>
-                <img src="/audience.png" className="h-6 w-auto" />
-              </div>
+              <UtilityIcon
+                label="Coins"
+                src="/coins.png"
+                alt="Coins"
+                className="!flex !flex-row"
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate("/store");
+                }}
+              />
+              <UtilityIcon
+                label="Call"
+                src="/call.png"
+                alt="Call"
+                className="!flex !flex-row"
+                disabled
+              />
+              <UtilityIcon
+                label="50:50"
+                src="/5050.png"
+                alt="50:50"
+                className="!flex !flex-row"
+                disabled
+              />
+              <UtilityIcon
+                label="Audience"
+                src="/audience.png"
+                alt="Audience"
+                className="!flex !flex-row"
+                disabled
+              />
             </div>
 
             <div className="flex items-center gap-6 mt-2">
-              <img src="/bell.png" className="h-8 w-auto" />
-              <img src="/logout.png" className="h-8 w-auto" />
-              <img
-                src="/manfists.png"
-                className="w-10 h-10 object-cover rounded-full border border-[#F9BC07]"
-              />
+              <button
+                onClick={() => {}}
+                title="Notifications"
+                aria-label="Notifications"
+                className="transition-all hover:scale-110"
+              >
+                <img src="/bell.png" className="h-8 w-auto" alt="Notifications" />
+              </button>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  handleLogout();
+                }}
+                title="Logout"
+                aria-label="Logout"
+                className="transition-all hover:scale-110"
+              >
+                <img src="/logout.png" className="h-8 w-auto" alt="Logout" />
+              </button>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate("/settings");
+                }}
+                title="Profile"
+                aria-label="Profile"
+                className="transition-all hover:scale-110 rounded-full overflow-hidden border border-[#F9BC07]"
+              >
+                <img
+                  src="/manfists.png"
+                  className="w-10 h-10 object-cover"
+                  alt="Profile"
+                />
+              </button>
             </div>
           </div>
         </div>
