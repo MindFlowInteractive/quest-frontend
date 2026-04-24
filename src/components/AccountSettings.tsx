@@ -7,6 +7,8 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { setNotificationSchedule } from '../features/preferences/preferencesSlice';
 import { DeleteAccountModal } from './modals/DeleteAccountModal';
 import { useThemeStore } from '../theme/themeStore';
+import { usePreparedView } from '../hooks/usePreparedView';
+import { SurfaceState } from './state/SurfaceState';
 
 interface ToggleProps {
     label?: string;
@@ -55,6 +57,33 @@ interface SettingsState {
     volume: number;
 }
 
+const defaultSettingsState: SettingsState = {
+    notifications: { schedule: 'Daily' },
+    reminder: { day: 'Monday', time: '14:30' },
+    volume: 37,
+};
+
+const readStoredSettings = (): SettingsState => {
+    const saved = localStorage.getItem('quest_account_settings');
+
+    if (!saved) {
+        return defaultSettingsState;
+    }
+
+    const parsed = JSON.parse(saved) as Partial<SettingsState>;
+
+    return {
+        notifications: {
+            schedule: parsed.notifications?.schedule ?? defaultSettingsState.notifications.schedule,
+        },
+        reminder: {
+            day: parsed.reminder?.day ?? defaultSettingsState.reminder.day,
+            time: parsed.reminder?.time ?? defaultSettingsState.reminder.time,
+        },
+        volume: typeof parsed.volume === 'number' ? parsed.volume : defaultSettingsState.volume,
+    };
+};
+
 const AccountSettings = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -63,21 +92,11 @@ const AccountSettings = () => {
     const themePreference = useThemeStore((s) => s.preference);
     const setThemePreference = useThemeStore((s) => s.setPreference);
 
-    const [state, setState] = useState<SettingsState>(() => {
-        const saved = localStorage.getItem('quest_account_settings');
-        if (saved) {
-            try {
-                return JSON.parse(saved);
-            } catch (e) {
-                console.error(e);
-            }
-        }
-        return {
-            notifications: { schedule: 'Daily' },
-            reminder: { day: 'Monday', time: '14:30' },
-            volume: 37,
-        };
+    const { data: preparedState, errorMessage, retry, status } = usePreparedView({
+        load: readStoredSettings,
     });
+
+    const [state, setState] = useState<SettingsState>(defaultSettingsState);
 
     const [activeTab, setActiveTab] = useState<TabOption>('Account');
   
@@ -85,8 +104,31 @@ const AccountSettings = () => {
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
-        localStorage.setItem('quest_account_settings', JSON.stringify(state));
-    }, [state]);
+        if (preparedState) {
+            setState(preparedState);
+        }
+    }, [preparedState]);
+
+    useEffect(() => {
+        if (preparedState) {
+            const schedule = preparedState.notifications.schedule;
+
+            if (
+                schedule === 'Daily' ||
+                schedule === 'Weekly' ||
+                schedule === 'Monthly' ||
+                schedule === 'Never'
+            ) {
+                dispatch(setNotificationSchedule(schedule));
+            }
+        }
+    }, [dispatch, preparedState]);
+
+    useEffect(() => {
+        if (status === 'ready') {
+            localStorage.setItem('quest_account_settings', JSON.stringify(state));
+        }
+    }, [state, status]);
 
     const handleThemeChange = (newTheme: ThemeOption) => {
         setThemePreference(newTheme);
@@ -103,6 +145,41 @@ const AccountSettings = () => {
 
         setState((prev) => ({ ...prev, notifications: { ...prev.notifications, schedule: val } }));
     };
+
+    if (status === 'loading') {
+        return (
+            <div className="min-h-screen bg-[#141516] text-white font-prompt p-6 md:p-12 lg:px-24">
+                <header className="mb-12">
+                    <h1 className="text-3xl md:text-4xl text-[#0A746D]">Setting</h1>
+                </header>
+                <SurfaceState
+                    status="loading"
+                    title="Loading settings"
+                    description="We’re preparing your account preferences, theme choices, and gameplay controls."
+                />
+            </div>
+        );
+    }
+
+    if (status === 'error') {
+        return (
+            <div className="min-h-screen bg-[#141516] text-white font-prompt p-6 md:p-12 lg:px-24">
+                <header className="mb-12">
+                    <h1 className="text-3xl md:text-4xl text-[#0A746D]">Setting</h1>
+                </header>
+                <SurfaceState
+                    status="error"
+                    title="Settings could not be loaded"
+                    description={
+                        errorMessage ??
+                        'We hit a problem while preparing your settings. Retry to restore this page.'
+                    }
+                    actionLabel="Retry"
+                    onAction={retry}
+                />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[#141516] text-white font-prompt p-6 md:p-12 lg:px-24">
@@ -253,7 +330,7 @@ const AccountSettings = () => {
                                 <label className="text-[#717171] text-lg block">Notification Schedule</label>
                                 <div className="relative group">
                                     <select
-                                        value={notificationSchedule}
+                                        value={state.notifications.schedule || notificationSchedule}
                                         onChange={(e) => handleNotificationChange(e.target.value)}
                                         className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
                                     >

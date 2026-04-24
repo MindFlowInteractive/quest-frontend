@@ -1,17 +1,77 @@
 import type { ActivityItem } from "@/types";
+import { usePreparedView } from "../hooks/usePreparedView";
+import { SurfaceState } from "./state/SurfaceState";
 
 type Props = {
   activities: ActivityItem[];
 };
 
 export const RecentActivity = ({ activities }: Props) => {
+  const { data, errorMessage, retry, status } = usePreparedView({
+    deps: [activities],
+    isEmpty: (nextActivities) => nextActivities.length === 0,
+    load: () => activities,
+  });
+
+  if (status === "loading") {
+    return (
+      <section className="w-full text-white p-4">
+        <h2 className="text-xl font-medium mb-4 uppercase tracking-wide border-b border-gray-700/50 pb-2 inline-block text-[#CFFDED]">
+          Recent
+        </h2>
+        <SurfaceState
+          status="loading"
+          title="Loading recent activity"
+          description="We’re gathering your latest matches, rewards, and progress updates."
+        />
+      </section>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <section className="w-full text-white p-4">
+        <h2 className="text-xl font-medium mb-4 uppercase tracking-wide border-b border-gray-700/50 pb-2 inline-block text-[#CFFDED]">
+          Recent
+        </h2>
+        <SurfaceState
+          status="error"
+          title="Recent activity is unavailable"
+          description={
+            errorMessage ??
+            "We couldn’t load your latest sessions. Retry to refresh this activity feed."
+          }
+          actionLabel="Retry"
+          onAction={retry}
+        />
+      </section>
+    );
+  }
+
+  if (status === "empty" || !data) {
+    return (
+      <section className="w-full text-white p-4">
+        <h2 className="text-xl font-medium mb-4 uppercase tracking-wide border-b border-gray-700/50 pb-2 inline-block text-[#CFFDED]">
+          Recent
+        </h2>
+        <SurfaceState
+          status="empty"
+          title="No activity yet"
+          description="Your latest matches and rewards will show up here after you complete a game."
+          actionLabel="Explore game modes"
+          onAction={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        />
+      </section>
+    );
+  }
+
   return (
     <section className="w-full text-white p-4">
       <h2 className="text-xl font-medium mb-4 uppercase tracking-wide border-b border-gray-700/50 pb-2 inline-block text-[#CFFDED]">
         Recent
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {activities.map((activity) => (
+        {data.map((activity) => (
           <div
             key={activity.id}
             className="flex items-center gap-4 bg-[#141516] border border-[#323336] rounded-lg p-4 hover:bg-[#1a1b1c] transition-colors"

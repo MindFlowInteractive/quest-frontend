@@ -179,3 +179,17 @@ body,
 .contributor-float:nth-child(4) {
   animation-delay: 1.5s;
 }
+
+@keyframes surface-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.surface-skeleton {
+  animation: surface-pulse 1.6s ease-in-out infinite;
+}

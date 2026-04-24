@@ -1,17 +1,77 @@
 import type { LeaderboardPlayer } from "@/types";
+import { SurfaceState } from "./state/SurfaceState";
+import { usePreparedView } from "../hooks/usePreparedView";
 
 type Props = {
   players: LeaderboardPlayer[];
 };
 
 export const Leaderboard = ({ players }: Props) => {
+  const { data, errorMessage, retry, status } = usePreparedView({
+    deps: [players],
+    isEmpty: (nextPlayers) => nextPlayers.length === 0,
+    load: () => players,
+  });
+
+  if (status === "loading") {
+    return (
+      <section className="w-full max-w-2xl">
+        <h2 className="text-xl text-[#CFFDED] font-medium mb-6 uppercase tracking-wide border-b-2 border-[#CFFDED] pb-2 inline-block">
+          PLAYERS
+        </h2>
+        <SurfaceState
+          status="loading"
+          title="Loading leaderboard"
+          description="We’re lining up the latest rankings and score totals for this table."
+        />
+      </section>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <section className="w-full max-w-2xl">
+        <h2 className="text-xl text-[#CFFDED] font-medium mb-6 uppercase tracking-wide border-b-2 border-[#CFFDED] pb-2 inline-block">
+          PLAYERS
+        </h2>
+        <SurfaceState
+          status="error"
+          title="Leaderboard unavailable"
+          description={
+            errorMessage ??
+            "We couldn’t prepare the leaderboard right now. Try again to reload the standings."
+          }
+          actionLabel="Retry"
+          onAction={retry}
+        />
+      </section>
+    );
+  }
+
+  if (status === "empty" || !data) {
+    return (
+      <section className="w-full max-w-2xl">
+        <h2 className="text-xl text-[#CFFDED] font-medium mb-6 uppercase tracking-wide border-b-2 border-[#CFFDED] pb-2 inline-block">
+          PLAYERS
+        </h2>
+        <SurfaceState
+          status="empty"
+          title="No players ranked yet"
+          description="The leaderboard will fill in once matches are completed. Play a round to help kick off the rankings."
+          actionLabel="Start playing"
+          onAction={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        />
+      </section>
+    );
+  }
+
   return (
     <section className="w-full max-w-2xl">
       <h2 className="text-xl text-[#CFFDED] font-medium mb-6 uppercase tracking-wide border-b-2 border-[#CFFDED] pb-2 inline-block">
         PLAYERS
       </h2>
       <div className="border-2 border-[#323336] rounded-lg p-4 space-y-2">
-        {players.map((player, index) => (
+        {data.map((player, index) => (
           <div
             key={player.id}
             className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#252525] transition-colors border-b border-gray-900/50 last:border-b-0"
