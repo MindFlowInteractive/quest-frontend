@@ -1,6 +1,37 @@
 @import url("https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
 
+@layer base {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid #f9bc07;
+    outline-offset: 2px;
+  }
+
+  button:focus-visible:disabled,
+  input:focus-visible:disabled,
+  select:focus-visible:disabled,
+  textarea:focus-visible:disabled {
+    outline: none;
+  }
+}
+
 :root {
   color: #e6fff6;
   background-color: #01100f;

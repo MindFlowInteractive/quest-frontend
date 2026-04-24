@@ -1,5 +1,9 @@
 import { ModalIcon } from "../icons";
 import { useEffect, useRef, useState } from "react";
+import { useDialogFocusTrap } from "../../hooks/useDialogFocusTrap";
+
+const MODAL_BTN_CLASS =
+  "bg-transparent! cursor-pointer hover:scale-105 transition-all rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]";
 
 type GameplayModalProps = {
   option?: number;
@@ -9,6 +13,8 @@ type GameplayModalProps = {
   centerValue: number;
   rightValue: number;
   mainValue: number;
+  onNext?: () => void;
+  onReplay?: () => void;
 };
 
 export function GameplayModal({
@@ -18,53 +24,24 @@ export function GameplayModal({
   rightValue = 1700,
   mainValue = 3000,
   openModal = true,
+  onNext = () => {},
+  onReplay = () => {},
 }: GameplayModalProps) {
   const [closeModal, setCloseModal] = useState(!openModal);
   const [isExit, setIsExit] = useState(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   const isCongratulation = option === 2;
-  useEffect(() => {
-    if (closeModal) return;
+  const dialogOpen = !closeModal;
 
-    const modal = modalRef.current;
-    if (!modal) return;
+  useDialogFocusTrap(modalRef, dialogOpen, () => setCloseModal(true));
 
-    const focusableElements = modal.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-
-    const firstElement = focusableElements[0];
-    const lastElement = focusableElements[focusableElements.length - 1];
-
-    firstElement?.focus();
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab") {
-        if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement?.focus();
-          }
-        } else {
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement?.focus();
-          }
-        }
-      }
-
-      if (e.key === "Escape") {
-        setCloseModal(true);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [closeModal, isExit]);
+  const titleId = "gameplay-modal-title";
+  const titleText = isExit
+    ? "Do you want to quite?"
+    : isCongratulation
+      ? "Congratulation"
+      : "Time out";
 
   useEffect(() => {
     document.body.style.overflow = closeModal ? "auto" : "hidden";
@@ -75,29 +52,27 @@ export function GameplayModal({
 
   return (
     <>
-      {!closeModal ? (
+      {dialogOpen ? (
         <div
           ref={modalRef}
           role="dialog"
           aria-modal="true"
+          aria-labelledby={titleId}
           className="alert-overlay-modal fixed inset-0 z-50  bg-[#211F1FB2]"
         >
           <div className="px-3 alert-content-modal max-w-146.75 w-full">
             <div className="px-3.5 pt-12.75 pb-9.75 flex justify-center bg-[#01100F] rounded-[20px] p">
               <div className="flex flex-col items-center">
                 <h3
+                  id={titleId}
                   className={`font-medium text-[34px]/8.5 tracking-[0.2em] text-center mb-2 ${isExit ? "text-white" : isCongratulation ? "text-[#048179]" : "text-[#EE2B22]"}`}
                 >
-                  {isExit
-                    ? "Do you want to quite?"
-                    : isCongratulation
-                      ? "Congratulation"
-                      : "Time out"}
+                  {titleText}
                 </h3>
 
                 <img
                   src="/images/image-modal.svg"
-                  alt="image-modal"
+                  alt=""
                   width={221}
                   height={191}
                 />
@@ -106,7 +81,9 @@ export function GameplayModal({
                 </div>
 
                 <div className="relative">
-                  <ModalIcon />
+                  <span aria-hidden="true">
+                    <ModalIcon />
+                  </span>
                   <span className="absolute  text-center w-10.75 text-[12px] font-medium left-6.25 top-21.75 text-[#01100f]">
                     {leftValue}
                   </span>
@@ -130,23 +107,27 @@ export function GameplayModal({
                 {isExit ? (
                   <div className="flex  gap-3 pt-8.25">
                     <button
+                      type="button"
                       onClick={() => setCloseModal(true)}
-                      className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!"
+                      className={MODAL_BTN_CLASS}
+                      aria-label="Yes, quit"
                     >
                       <img
                         src="/images/button-yes.svg"
-                        alt="image-modal"
+                        alt=""
                         width={208}
                         height={68}
                       />
                     </button>
                     <button
+                      type="button"
                       onClick={() => setIsExit(false)}
-                      className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!"
+                      className={MODAL_BTN_CLASS}
+                      aria-label="No, continue playing"
                     >
                       <img
                         src="/images/button-no.svg"
-                        alt="image-modal"
+                        alt=""
                         width={208}
                         height={68}
                       />
@@ -154,29 +135,41 @@ export function GameplayModal({
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2 ">
-                    <button className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!">
+                    <button
+                      type="button"
+                      onClick={onNext}
+                      className={MODAL_BTN_CLASS}
+                      aria-label="Next"
+                    >
                       <img
                         src="/images/next.svg"
-                        alt="image-modal"
-                        width={319}
-                        height={53}
-                      />
-                    </button>
-                    <button className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!">
-                      <img
-                        src="/images/replay.svg"
-                        alt="image-modal"
+                        alt=""
                         width={319}
                         height={53}
                       />
                     </button>
                     <button
+                      type="button"
+                      onClick={onReplay}
+                      className={MODAL_BTN_CLASS}
+                      aria-label="Replay"
+                    >
+                      <img
+                        src="/images/replay.svg"
+                        alt=""
+                        width={319}
+                        height={53}
+                      />
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => setIsExit(true)}
-                      className="bg-transparent! cursor-pointer hover:scale-105 transition-all focus:scale-105 focus:outline-none!"
+                      className={MODAL_BTN_CLASS}
+                      aria-label="Exit game"
                     >
                       <img
                         src="/images/exit.svg"
-                        alt="image-modal"
+                        alt=""
                         width={319}
                         height={53}
                       />
