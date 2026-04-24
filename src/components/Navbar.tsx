@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { getNavItems } from '../config/routes';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navItems = getNavItems('main');
 
   return (
     <nav className="relative ">
@@ -24,48 +26,19 @@ const NavBar = () => {
           {/* DESKTOP */}
           <div className="hidden xl:flex items-center ">
             <div className="flex justify-center text-base text-[#F9BC07] items-center gap-3">
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold"
-                    : "cursor-pointer hover:text-white transition-colors"
-                }
-              >
-               Home
-              </NavLink>
-              <NavLink
-                to="/store"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold"
-                    : "cursor-pointer hover:text-white transition-colors"
-                }
-              >
-                Store
-              </NavLink>
-
-              <NavLink
-                to="/game-mode"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold"
-                    : "cursor-pointer hover:text-white transition-colors"
-                }
-              >
-                Game mode
-              </NavLink>
-
-              <NavLink
-                to="/settings"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold"
-                    : "cursor-pointer hover:text-white transition-colors"
-                }
-              >
-                Setting
-              </NavLink>
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-white font-bold"
+                      : "cursor-pointer hover:text-white transition-colors"
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
 
               <div className="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform">
                 <p>Coins</p>
@@ -125,20 +98,15 @@ const NavBar = () => {
       {isOpen && (
         <div className="xl:hidden bg-[#323336] w-full px-10 pb-10 flex flex-col gap-6 absolute top-full left-0 z-50 border-t border-gray-800 shadow-2xl">
           <div className="flex flex-col text-base text-[#F9BC07] gap-6 pt-5">
-            <NavLink to="/" onClick={() => setIsOpen(false)}>
-              Home
-            </NavLink>
-            <NavLink to="/store" onClick={() => setIsOpen(false)}>
-              Store
-            </NavLink>
-
-            <NavLink to="/game-mode" onClick={() => setIsOpen(false)}>
-              Game mode
-            </NavLink>
-
-            <NavLink to="/settings" onClick={() => setIsOpen(false)}>
-              Setting
-            </NavLink>
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </NavLink>
+            ))}
 
             <div className="flex flex-col gap-6">
               <div className="flex items-center gap-2">
