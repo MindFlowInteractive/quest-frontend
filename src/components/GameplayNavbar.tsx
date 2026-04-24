@@ -44,14 +44,16 @@ const NavBar = () => {
                   <Link
                     key={index}
                     to={item.link || "#"}
-                    className="cursor-pointer hover:text-white hover:transition-colors text-[#F9BC07]"
+                    aria-label={item.name ? undefined : item.label}
+                    className="cursor-pointer hover:text-white hover:transition-colors text-[#F9BC07] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                   >
                     {item.image ? (
                       <div className="flex items-center gap-2 cursor-pointer ">
                         {item.name}
                         <img
                           src={item.image}
-                          alt={item.name}
+                          alt={item.name ?? ""}
+                          aria-hidden={item.name ? undefined : true}
                           className="ml-2 object-contain"
                         />
                       </div>
@@ -66,10 +68,13 @@ const NavBar = () => {
 
           <div className="xl:hidden flex items-center">
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-[#F9BC07]"
+              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isOpen}
+              className="text-[#F9BC07] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07]"
             >
-              {isOpen ? <X size={32} /> : <Menu size={32} />}
+              {isOpen ? <X size={32} aria-hidden="true" /> : <Menu size={32} aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -102,14 +107,16 @@ const NavBar = () => {
                   onClick={() => setIsOpen(false)}
                   key={index}
                   to={item.link || "#"}
-                  className="cursor-pointer hover:text-white hover:transition-colors text-[#F9BC07]"
+                  aria-label={item.name ? undefined : item.label}
+                  className="cursor-pointer hover:text-white hover:transition-colors text-[#F9BC07] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
                 >
                   {item.image ? (
                     <div className="flex items-center gap-2 cursor-pointer ">
                       {item.name}
                       <img
                         src={item.image}
-                        alt={item.name}
+                        alt={item.name ?? ""}
+                        aria-hidden={item.name ? undefined : true}
                         className="ml-1 object-contain"
                       />
                     </div>
@@ -169,7 +176,7 @@ const dataMenu = [
     link: "#",
     image: "/audience.svg",
   },
-  { image: "/bell.svg", link: "#" },
-  { image: "/logout.svg", link: "#" },
-  { image: "/manfists.png", link: "#" },
+  { label: "Notifications", image: "/bell.svg", link: "#" },
+  { label: "Log out", image: "/logout.svg", link: "#" },
+  { label: "Open profile menu", image: "/manfists.png", link: "#" },
 ];

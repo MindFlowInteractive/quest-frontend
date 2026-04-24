@@ -112,10 +112,13 @@ const NavBar = () => {
           {/* MOBILE TOGGLE */}
           <div className="xl:hidden flex items-center">
             <button
+              type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-[#F9BC07]"
+              aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={isOpen}
+              className="text-[#F9BC07] rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07]"
             >
-              {isOpen ? <X size={32} /> : <Menu size={32} />}
+              {isOpen ? <X size={32} aria-hidden="true" /> : <Menu size={32} aria-hidden="true" />}
             </button>
           </div>
         </div>
@@ -143,29 +146,49 @@ const NavBar = () => {
             <div className="flex flex-col gap-6">
               <div className="flex items-center gap-2">
                 <p>Coins</p>
-                <img src="/coins.png" className="h-6 w-auto" />
+                <img src="/coins.png" alt="" aria-hidden="true" className="h-6 w-auto" />
               </div>
               <div className="flex items-center gap-2">
                 <p>Call</p>
-                <img src="/call.png" className="h-6 w-auto" />
+                <img src="/call.png" alt="" aria-hidden="true" className="h-6 w-auto" />
               </div>
               <div className="flex items-center gap-2">
                 <p>50:50</p>
-                <img src="/5050.png" className="h-6 w-auto" />
+                <img src="/5050.png" alt="" aria-hidden="true" className="h-6 w-auto" />
               </div>
               <div className="flex items-center gap-2">
                 <p>Audience</p>
-                <img src="/audience.png" className="h-6 w-auto" />
+                <img src="/audience.png" alt="" aria-hidden="true" className="h-6 w-auto" />
               </div>
             </div>
 
             <div className="flex items-center gap-6 mt-2">
-              <img src="/bell.png" className="h-8 w-auto" />
-              <img src="/logout.png" className="h-8 w-auto" />
-              <img
-                src="/manfists.png"
-                className="w-10 h-10 object-cover rounded-full border border-[#F9BC07]"
-              />
+              <button
+                type="button"
+                aria-label="Notifications"
+                className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
+              >
+                <img src="/bell.png" alt="" aria-hidden="true" className="h-8 w-auto" />
+              </button>
+              <button
+                type="button"
+                aria-label="Log out"
+                className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
+              >
+                <img src="/logout.png" alt="" aria-hidden="true" className="h-8 w-auto" />
+              </button>
+              <button
+                type="button"
+                aria-label="Open profile menu"
+                className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
+              >
+                <img
+                  src="/manfists.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="w-10 h-10 object-cover rounded-full border border-[#F9BC07]"
+                />
+              </button>
             </div>
           </div>
         </div>
