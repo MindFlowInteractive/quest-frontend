@@ -5,6 +5,7 @@ import LeaderboardPage from '../pages/LeaderboardPage';
 import { GetStarted }  from '@/pages/GetStarted';
 import SignIn from '../pages/auth/SignIn';
 import Dashboard from '../pages/Dashboard';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
 const AppRoutes = () => {
   return (
@@ -13,11 +14,29 @@ const AppRoutes = () => {
       
       <Route path="/sign-in" element={<SignIn />} />
       
-      <Route path="/gameplay" element={<Gameplay />} />
+      <Route path="/gameplay" element={
+        <ProtectedRoute>
+          <Gameplay />
+        </ProtectedRoute>
+      } />
       
-      <Route path="/leaderboard" element={<LeaderboardPage />} />
-      <Route path="/get-started" element={<GetStarted />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/leaderboard" element={
+        <ProtectedRoute>
+          <LeaderboardPage />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/get-started" element={
+        <ProtectedRoute>
+          <GetStarted />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
       
       <Route path="*" element={
         <div className="h-screen bg-black flex items-center justify-center text-white text-2xl">

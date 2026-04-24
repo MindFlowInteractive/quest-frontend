@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { SessionService } from "../services/SessionService";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    SessionService.logout(navigate);
+  };
 
   return (
     <nav className="relative ">
@@ -99,7 +105,8 @@ const NavBar = () => {
               <img
                 src="/logout.svg"
                 alt="Logout"
-                className="h-7 cursor-pointer"
+                className="h-7 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={handleLogout}
               />
               <img
                 src="/manfists.png"
@@ -161,7 +168,11 @@ const NavBar = () => {
 
             <div className="flex items-center gap-6 mt-2">
               <img src="/bell.png" className="h-8 w-auto" />
-              <img src="/logout.png" className="h-8 w-auto" />
+              <img
+                src="/logout.png"
+                className="h-8 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={handleLogout}
+              />
               <img
                 src="/manfists.png"
                 className="w-10 h-10 object-cover rounded-full border border-[#F9BC07]"

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import type { CredentialResponse } from "@react-oauth/google";
 import { AuthService } from "../../services/AuthService";
+import { GoogleAuthService } from "../../services/GoogleAuthService";
 import type { SignInCredentials } from "../../services/AuthService";
 import logiquestLogo from "../../assets/logiquest (2).png";
 import googleIcon from "../../assets/google.png";
@@ -19,6 +22,10 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [remindLater, setRemindLater] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [googleError, setGoogleError] = useState<string | null>(null);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
   const signInMutation = useMutation({
     mutationFn: (credentials: SignInCredentials) =>
@@ -35,6 +42,34 @@ export default function SignIn() {
       setValidationError("Something went wrong. Please try again.");
     },
   });
+
+  const handleGoogleSuccess = async (response: CredentialResponse) => {
+    setIsGoogleLoading(true);
+    setGoogleError(null);
+
+    try {
+      if (response.credential) {
+        const result = await GoogleAuthService.handleSignIn(response.credential);
+
+        if (result.success) {
+          setGoogleError(null);
+          navigate("/", { replace: true });
+        } else {
+          setGoogleError(result.error || "Authentication failed.");
+        }
+      }
+    } catch (error) {
+      console.error("Google Sign-In error:", error);
+      setGoogleError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setGoogleError("Google Sign-In was interrupted or failed. Please check your connection.");
+    setIsGoogleLoading(false);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,66 +97,89 @@ export default function SignIn() {
   const errorMessage = validationError ?? signInMutation.data?.error ?? null;
 
   return (
-    <div
-      className="min-h-screen bg-black flex flex-col"
-      style={{ fontFamily: "Prompt, sans-serif" }}
-    >
-      {/* Header */}
-      <header className="flex justify-between items-center px-6 py-5 md:px-10">
-        <Link to="/" className="shrink-0">
-          <img
-            src={logiquestLogo}
-            alt="LogiQuest"
-            className="h-10 w-auto object-contain"
-          />
-        </Link>
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-[#757575] cursor-pointer transition-colors"
-        >
-          <img src={arrowLeft} alt="" className="w-5 h-5" />
-          <span className="uppercase text-sm font-medium">Back</span>
-        </button>
-      </header>
-
-      {/* Main content */}
-      <main className="flex-1 flex flex-col items-center justify-center px-6 pb-12">
-        <div className="w-full max-w-md">
-          <h1
-            className="text-center text-2xl font-medium mb-8"
-            style={{ color: ACCENT_LIGHT }}
+    <GoogleOAuthProvider clientId={clientId}>
+      <div
+        className="min-h-screen bg-black flex flex-col"
+        style={{ fontFamily: "Prompt, sans-serif" }}
+      >
+        {/* Header */}
+        <header className="flex justify-between items-center px-6 py-5 md:px-10">
+          <Link to="/" className="shrink-0">
+            <img
+              src={logiquestLogo}
+              alt="LogiQuest"
+              className="h-10 w-auto object-contain"
+            />
+          </Link>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-[#757575] cursor-pointer transition-colors"
           >
-            Sign in with
-          </h1>
+            <img src={arrowLeft} alt="" className="w-5 h-5" />
+            <span className="uppercase text-sm font-medium">Back</span>
+          </button>
+        </header>
 
-          {/* Social login buttons */}
-          <div className="flex flex-col gap-3 mb-6 w-[85%] max-w-sm mx-auto">
-            <button
-              type="button"
-              className="w-full flex items-center justify-between px-4 py-3 rounded-[100px] border-4 bg-transparent transition-colors hover:bg-white/5"
-              style={{ borderColor: BORDER_COLOR, color: "#0A746D" }}
+        {/* Main content */}
+        <main className="flex-1 flex flex-col items-center justify-center px-6 pb-12">
+          <div className="w-full max-w-md">
+            <h1
+              className="text-center text-2xl font-medium mb-8"
+              style={{ color: ACCENT_LIGHT }}
             >
-              <span>Google an account</span>
-              <img src={googleIcon} alt="" className="w-6 h-6" />
-            </button>
-            <button
-              type="button"
-              className="w-full flex items-center justify-between px-4 py-3 rounded-[100px] border-4 bg-transparent transition-colors hover:bg-white/5"
-              style={{ borderColor: BORDER_COLOR, color: "#0A746D" }}
-            >
-              <span>Apple an account</span>
-              <img src={appleIcon} alt="" className="w-6 h-6" />
-            </button>
-            <button
-              type="button"
-              className="w-full flex items-center justify-between px-4 py-3 rounded-[100px] border-4 bg-transparent transition-colors hover:bg-white/5"
-              style={{ borderColor: BORDER_COLOR, color: "#0A746D" }}
-            >
-              <span>Microsoft an account</span>
-              <img src={microsoftIcon} alt="" className="w-6 h-6" />
-            </button>
-          </div>
+              Sign in with
+            </h1>
+
+            {/* Social login buttons */}
+            <div className="flex flex-col gap-3 mb-6 w-[85%] max-w-sm mx-auto">
+              {/* Google Login Button */}
+              <div className="w-full">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  useOneTap={false}
+                  theme="filled_blue"
+                  size="large"
+                  width="100%"
+                />
+              </div>
+
+              {/* Apple button - placeholder */}
+              <button
+                type="button"
+                disabled
+                className="w-full flex items-center justify-between px-4 py-3 rounded-[100px] border-4 bg-transparent transition-colors hover:bg-white/5 opacity-50 cursor-not-allowed"
+                style={{ borderColor: BORDER_COLOR, color: "#0A746D" }}
+              >
+                <span>Apple an account</span>
+                <img src={appleIcon} alt="" className="w-6 h-6" />
+              </button>
+
+              {/* Microsoft button - placeholder */}
+              <button
+                type="button"
+                disabled
+                className="w-full flex items-center justify-between px-4 py-3 rounded-[100px] border-4 bg-transparent transition-colors hover:bg-white/5 opacity-50 cursor-not-allowed"
+                style={{ borderColor: BORDER_COLOR, color: "#0A746D" }}
+              >
+                <span>Microsoft an account</span>
+                <img src={microsoftIcon} alt="" className="w-6 h-6" />
+              </button>
+            </div>
+
+            {googleError && (
+              <div
+                className="px-4 py-3 rounded-xl text-sm mb-4"
+                style={{
+                  backgroundColor: "rgba(220, 38, 38, 0.15)",
+                  color: "#fca5a5",
+                  border: "1px solid rgba(220, 38, 38, 0.4)",
+                }}
+              >
+                {googleError}
+              </div>
+            )}
 
           {/* Or separator */}
           <div className="flex items-center gap-4 my-6 w-full">
@@ -223,5 +281,6 @@ export default function SignIn() {
         </div>
       </main>
     </div>
+    </GoogleOAuthProvider>
   );
 }

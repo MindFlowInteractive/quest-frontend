@@ -1,4 +1,4 @@
-import { clearSession } from "../session/clearSession";
+import { SessionService } from "./SessionService";
 
 const API_BASE = import.meta.env.VITE_BACKEND_API_URL || "";
 
@@ -52,10 +52,10 @@ export const AuthService = {
       }
 
       if (data.token) {
-        localStorage.setItem("quest_token", data.token);
+        SessionService.setToken(data.token);
       }
       if (data.user) {
-        localStorage.setItem("quest_user", JSON.stringify(data.user));
+        SessionService.setUser(data.user);
       }
 
       return {
@@ -70,9 +70,5 @@ export const AuthService = {
         error: "Network error. Please check your connection and try again.",
       };
     }
-  },
-
-  logout() {
-    clearSession();
   },
 };

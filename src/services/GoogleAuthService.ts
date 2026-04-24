@@ -1,5 +1,5 @@
 import { jwtDecode } from "jwt-decode";
-import { clearSession } from "../session/clearSession";
+import { SessionService } from "./SessionService";
 
 interface GoogleJwtPayload {
   email: string;
@@ -38,14 +38,20 @@ export const GoogleAuthService = {
         return { success: false, error: "The Google session has expired. Please sign in again." };
       }
 
+      const user: GoogleUser = {
+        email: decoded.email,
+        name: decoded.name,
+        picture: decoded.picture,
+        id: decoded.sub
+      };
+
+      // Store token and user in session
+      SessionService.setToken(credential);
+      SessionService.setUser(user);
+
       return {
         success: true,
-        user: {
-          email: decoded.email,
-          name: decoded.name,
-          picture: decoded.picture,
-          id: decoded.sub
-        }
+        user,
       };
 
     } catch (error) {
@@ -53,9 +59,4 @@ export const GoogleAuthService = {
       return { success: false, error: "Failed to process the login token. Please try again." };
     }
   },
-
-  logout() {
-    clearSession();
-    window.location.reload();
-  }
 };
