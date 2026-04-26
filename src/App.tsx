@@ -19,6 +19,8 @@ import Navbar from "./components/Navbar";
 import GameplayNavbar from "./components/GameplayNavbar";
 import Store from "./pages/Store";
 import GameMode from "./pages/GameMode";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const Home = () => (
   <>
@@ -46,19 +48,19 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/settings" element={<AccountSettings />} />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <AccountSettings />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/leaderboard" element={<LeaderboardPage />} />
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/store" element={<Store />} />
         <Route path="/game-mode" element={<GameMode />} />
-        <Route
-          path="*"
-          element={
-            <div className="h-screen flex items-center justify-center text-white text-2xl">
-              404 — Page Not Found
-            </div>
-          }
-        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   );
