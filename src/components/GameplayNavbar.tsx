@@ -139,7 +139,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="relative ">
+    <nav className="relative " aria-label="Primary">
       <div className=" px-5 md:px-10 py-5 w-full">
         <div className="flex justify-between items-center">
           <Link
