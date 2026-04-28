@@ -1,26 +1,11 @@
 import { useEffect, useId, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { clearSession } from "../session/clearSession";
+import { NavLink } from "react-router-dom";
+import { getNavItems } from '../config/routes';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-  const mobileMenuId = useId();
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsOpen(false);
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [isOpen]);
-
-  const handleLogout = () => {
-    clearSession();
-    navigate("/sign-in", { replace: true });
-  };
+  const navItems = getNavItems('main');
 
   return (
     <nav className="relative " aria-label="Primary">
@@ -46,48 +31,19 @@ const NavBar = () => {
 
           <div className="hidden xl:flex items-center ">
             <div className="flex justify-center text-base text-[#F9BC07] items-center gap-3">
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                    : "cursor-pointer hover:text-white transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                }
-              >
-                Home
-              </NavLink>
-              <NavLink
-                to="/store"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                    : "cursor-pointer hover:text-white transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                }
-              >
-                Store
-              </NavLink>
-
-              <NavLink
-                to="/game-mode"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                    : "cursor-pointer hover:text-white transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                }
-              >
-                Game mode
-              </NavLink>
-
-              <NavLink
-                to="/settings"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-white font-bold rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                    : "cursor-pointer hover:text-white transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#01100F]"
-                }
-              >
-                Setting
-              </NavLink>
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-white font-bold"
+                      : "cursor-pointer hover:text-white transition-colors"
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
 
               <span className="flex items-center gap-2" aria-hidden="true">
                 <span>Coins</span>
@@ -164,36 +120,15 @@ const NavBar = () => {
           role="presentation"
         >
           <div className="flex flex-col text-base text-[#F9BC07] gap-6 pt-5">
-            <NavLink
-              to="/"
-              onClick={() => setIsOpen(false)}
-              className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/store"
-              onClick={() => setIsOpen(false)}
-              className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
-            >
-              Store
-            </NavLink>
-
-            <NavLink
-              to="/game-mode"
-              onClick={() => setIsOpen(false)}
-              className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
-            >
-              Game mode
-            </NavLink>
-
-            <NavLink
-              to="/settings"
-              onClick={() => setIsOpen(false)}
-              className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#323336]"
-            >
-              Setting
-            </NavLink>
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </NavLink>
+            ))}
 
             <div className="flex flex-col gap-6" aria-hidden="true">
               <div className="flex items-center gap-2">
