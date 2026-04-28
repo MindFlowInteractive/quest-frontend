@@ -6,6 +6,7 @@ import { getNavItems } from '../config/routes';
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const mobileMenuId = useId();
   const navItems = getNavItems('landing');
 
   // Scroll anchors remain separate (they're not routes)
