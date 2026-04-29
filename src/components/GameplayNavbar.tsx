@@ -2,11 +2,12 @@ import { useEffect, useId, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Link as ScrollLink } from "react-scroll";
-import { getNavItems } from '../config/routes';
+
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navItems = getNavItems('landing');
+  const mobileMenuId = useId();
+
 
   // Scroll anchors remain separate (they're not routes)
   const scrollMenu = [
@@ -46,16 +47,6 @@ const NavBar = () => {
                 >
                   {item.name}
                 </ScrollLink>
-              ))}
-
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className="cursor-pointer hover:text-white hover:transition-colors text-[#F9BC07]"
-                >
-                  {item.label}
-                </Link>
               ))}
 
               {/* Game-specific items */}
@@ -117,17 +108,6 @@ const NavBar = () => {
               >
                 {item.name}
               </ScrollLink>
-            ))}
-
-            {navItems.map((item) => (
-              <Link
-                onClick={() => setIsOpen(false)}
-                key={item.path}
-                to={item.path}
-                className="cursor-pointer hover:text-white hover:transition-colors text-[#F9BC07]"
-              >
-                {item.label}
-              </Link>
             ))}
 
             <div className="flex flex-col gap-6">
