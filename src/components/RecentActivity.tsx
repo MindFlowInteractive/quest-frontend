@@ -98,29 +98,29 @@ export const RecentActivity = ({ activities }: Props) => {
               <div className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1 text-sm text-gray-400">
                 {/* Row 1: Group Size */}
                 <div className="flex items-center gap-2">
-                  <img src="/call.svg" alt="call" className="w-4" />
+                  <img src="/avatar.svg" alt="" className="w-4" />
                 </div>
                 <div className="flex justify-end gap-2 items-center">
                   <span>{activity.groupSize}</span>
-                  <span className="text-yellow-500">🏆</span>
+                  <span className="text-yellow-500">{activity.coins.gold}</span>
                 </div>
 
                 {/* Row 2: Participants */}
                 <div className="flex items-center gap-2">
-                  <img src="/audience.svg" alt="audience" className="w-4" />
+                  <img src="/avatar.svg" alt="" className="w-4" />
                 </div>
                 <div className="flex justify-end gap-2 items-center">
                   <span>{activity.participants}</span>
-                  <span className="text-yellow-500">🏆</span>
+                  <span className="text-yellow-500">{activity.coins.gold}</span>
                 </div>
 
                 {/* Row 3: Coins & Earnings */}
                 <div className="flex items-center gap-1">
-                  <img src="/50-50.svg" alt="50:50" className="w-10" />
+                  <img src="/coins.svg" alt="" className="w-4" />
                 </div>
                 <div className="flex justify-end gap-2 items-center">
                   <span>{activity.earnings}</span>
-                  <span className="text-yellow-500">🏆</span>
+                  <span className="text-yellow-500">{activity.coins.gold}</span>
                 </div>
               </div>
             </div>
@@ -130,3 +130,4 @@ export const RecentActivity = ({ activities }: Props) => {
     </section>
   );
 };
+
