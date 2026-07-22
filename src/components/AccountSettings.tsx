@@ -9,6 +9,7 @@ import { DeleteAccountModal } from './modals/DeleteAccountModal';
 import { useThemeStore } from '../theme/themeStore';
 import { usePreparedView } from '../hooks/usePreparedView';
 import { SurfaceState } from './state/SurfaceState';
+import { gameModes } from '../data/gameModes';
 
 interface ToggleProps {
     label?: string;
@@ -40,6 +41,8 @@ const Toggle = ({ label, checked, onChange=() => {}, id }: ToggleProps) => (
 );
 
 type ThemeOption = 'dark' | 'light' | 'system';
+type DifficultyOption = 'easy' | 'medium' | 'hard';
+type AnimationSpeedOption = 'slow' | 'normal' | 'fast';
 type TabOption = 'Profile' | 'Account' | 'Game setting';
 
 interface NotificationState {
@@ -55,12 +58,45 @@ interface SettingsState {
     notifications: NotificationState;
     reminder: ReminderState;
     volume: number;
+    gameMode: string;
+    difficulty: DifficultyOption;
+    animationSpeed: AnimationSpeedOption;
 }
+
+interface OptionSelectorProps<T extends string> {
+    options: ReadonlyArray<{ value: T; label: string }>;
+    selectedValue: T;
+    onChange: (value: T) => void;
+}
+
+const OptionSelector = <T extends string>({ options, selectedValue, onChange }: OptionSelectorProps<T>) => (
+    <div className="pt-3 flex gap-3">
+        {options.map((option) => {
+            const isActive = selectedValue === option.value;
+
+            return (
+                <button
+                    key={option.value}
+                    type="button"
+                    onClick={() => onChange(option.value)}
+                    className={`border border-[#353536] rounded-md w-full h-12 mb-5 transition-colors ${
+                        isActive ? 'bg-[#F9BC07] text-[#141516]' : 'text-[#717171]'
+                    }`}
+                >
+                    {option.label}
+                </button>
+            );
+        })}
+    </div>
+);
 
 const defaultSettingsState: SettingsState = {
     notifications: { schedule: 'Daily' },
     reminder: { day: 'Monday', time: '14:30' },
     volume: 37,
+    gameMode: 'classic',
+    difficulty: 'medium',
+    animationSpeed: 'normal',
 };
 
 const readStoredSettings = (): SettingsState => {
@@ -72,6 +108,21 @@ const readStoredSettings = (): SettingsState => {
 
     const parsed = JSON.parse(saved) as Partial<SettingsState>;
 
+    const savedGameMode =
+        typeof parsed.gameMode === 'string' && gameModes.some((mode) => mode.id === parsed.gameMode)
+            ? parsed.gameMode
+            : defaultSettingsState.gameMode;
+
+    const savedDifficulty =
+        parsed.difficulty === 'easy' || parsed.difficulty === 'medium' || parsed.difficulty === 'hard'
+            ? parsed.difficulty
+            : defaultSettingsState.difficulty;
+
+    const savedAnimationSpeed =
+        parsed.animationSpeed === 'slow' || parsed.animationSpeed === 'normal' || parsed.animationSpeed === 'fast'
+            ? parsed.animationSpeed
+            : defaultSettingsState.animationSpeed;
+
     return {
         notifications: {
             schedule: parsed.notifications?.schedule ?? defaultSettingsState.notifications.schedule,
@@ -81,6 +132,9 @@ const readStoredSettings = (): SettingsState => {
             time: parsed.reminder?.time ?? defaultSettingsState.reminder.time,
         },
         volume: typeof parsed.volume === 'number' ? parsed.volume : defaultSettingsState.volume,
+        gameMode: savedGameMode,
+        difficulty: savedDifficulty,
+        animationSpeed: savedAnimationSpeed,
     };
 };
 
@@ -233,23 +287,30 @@ const AccountSettings = () => {
                                 <div className="text-[#717171] text-lg block">Preferred Game Mode</div>
                                 <div className="relative group">
                                     <select
+                                        value={state.gameMode}
+                                        onChange={(e) => setState((prev) => ({ ...prev, gameMode: e.target.value }))}
                                         className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
                                     >
-                                        <option value="classic-mode">Classic Mode</option>
-                                        <option value="Mode">Mode</option>
-                                        <option value="Mode">Mode</option>
-                                    
+                                        {gameModes.map((mode) => (
+                                            <option key={mode.id} value={mode.id}>
+                                                {mode.name}
+                                            </option>
+                                        ))}
                                     </select>
                                     <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 text-[#717171] pointer-events-none group-hover:text-[#F9BC07] transition-colors" />
                                 </div>
                             </div>
 
                         <div className="text-[#717171] text-lg pt-4">Difficulty Level</div>
-                        <div className='pt-3 flex gap-3'>
-                            <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Easy</button>
-                            <button className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516]">Medium</button>
-                            <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Hard</button>
-                        </div>
+                        <OptionSelector
+                            options={[
+                                { value: 'easy', label: 'Easy' },
+                                { value: 'medium', label: 'Medium' },
+                                { value: 'hard', label: 'Hard' },
+                            ]}
+                            selectedValue={state.difficulty}
+                            onChange={(value) => setState((prev) => ({ ...prev, difficulty: value }))}
+                        />
 
                         <hr className="border-[#353536] my-7" />
                         <div>
@@ -297,11 +358,15 @@ const AccountSettings = () => {
                                      <Toggle checked={false} />
                             </div>
                             <div className="text-[#717171] text-lg pt-8">Animation Speed</div>
-                            <div className='pt-3 flex gap-3'>
-                                <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Slow</button>
-                                <button className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516]">Normal</button>
-                                <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Fast</button>
-                        </div>
+                            <OptionSelector
+                                options={[
+                                    { value: 'slow', label: 'Slow' },
+                                    { value: 'normal', label: 'Normal' },
+                                    { value: 'fast', label: 'Fast' },
+                                ]}
+                                selectedValue={state.animationSpeed}
+                                onChange={(value) => setState((prev) => ({ ...prev, animationSpeed: value }))}
+                            />
                         </div>
                         <div>
                             <h2 id="accessibility-heading" className="pt-10 text-2xl font-medium mb-4 text-[#CFFDED]">Accessibility</h2>
@@ -393,7 +458,7 @@ const AccountSettings = () => {
                                     onChange={() => handleThemeChange('system')}
                                 />
                             </div>
-                        section>
+                        </section>
 
                         <section aria-labelledby="sound-heading">
                             <h2 id="sound-heading" className="text-2xl font-medium mb-8 text-[#CFFDED]">Sound</h2>
