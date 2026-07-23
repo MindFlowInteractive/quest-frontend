@@ -1,11 +1,11 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 
 const faqs = [
   {
     id: 1,
-    question: "What is LogiGuest?",
+    question: "What is LogiQuest?",
     answer:
-      "LogiGuest is an interactive web-based game designed to test your logic and knowledge through various fun and challenging game modes.",
+      "LogiQuest is an interactive web-based game designed to test your logic and knowledge through various fun and challenging game modes.",
   },
   {
     id: 2,
@@ -75,6 +75,9 @@ const FaqsSection = () => {
               <button
                 onClick={() => toggle(faq.id)}
                 className="w-full flex justify-between items-center py-4 md:py-5 text-left"
+                aria-expanded={openIds.includes(faq.id)}
+                aria-controls={`faq-${faq.id}-panel`}
+                id={`faq-${faq.id}-q`}
               >
                 <span className="text-lg md:text-xl font-semibold text-white pr-4">
                   {faq.question}
@@ -93,6 +96,9 @@ const FaqsSection = () => {
 
               {/* Answers */}
               <div
+                role="region"
+                id={`faq-${faq.id}-panel`}
+                aria-labelledby={`faq-${faq.id}-q`}
                 className={`overflow-hidden transition-all duration-300 ${openIds.includes(faq.id) ? "max-h-96 py-4" : "max-h-0"
                   }`}
               >
@@ -107,3 +113,5 @@ const FaqsSection = () => {
 };
 
 export default FaqsSection;
+
+
