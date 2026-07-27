@@ -17,13 +17,16 @@ interface ToggleProps {
     id?: string;
 }
 
-const Toggle = ({ label, checked, onChange=() => {}, id }: ToggleProps) => (
+const Toggle = ({ label, checked = false, onChange = () => {}, id }: ToggleProps) => (
     <div className="flex items-center justify-between py-4">
-        <label htmlFor={id} className="text-[#9CA3AF] text-lg cursor-pointer select-none">
-            {label}
-        </label>
+        {label && (
+            <label htmlFor={id} className="text-[#9CA3AF] text-lg cursor-pointer select-none">
+                {label}
+            </label>
+        )}
         <button
             id={id}
+            type="button"
             role="switch"
             aria-checked={checked}
             onClick={() => onChange(!checked)}
@@ -31,9 +34,9 @@ const Toggle = ({ label, checked, onChange=() => {}, id }: ToggleProps) => (
         >
             <span
                 className={`
-          absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform duration-200 shadow-sm
-          ${checked ? 'translate-x-6 bg-[#F9BC07]' : 'translate-x-0 bg-[#717171]'}
-        `}
+                    absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-transform duration-200 shadow-sm
+                    ${checked ? 'translate-x-6 bg-[#F9BC07]' : 'translate-x-0 bg-[#717171]'}
+                `}
             />
         </button>
     </div>
@@ -70,18 +73,21 @@ const readStoredSettings = (): SettingsState => {
         return defaultSettingsState;
     }
 
-    const parsed = JSON.parse(saved) as Partial<SettingsState>;
-
-    return {
-        notifications: {
-            schedule: parsed.notifications?.schedule ?? defaultSettingsState.notifications.schedule,
-        },
-        reminder: {
-            day: parsed.reminder?.day ?? defaultSettingsState.reminder.day,
-            time: parsed.reminder?.time ?? defaultSettingsState.reminder.time,
-        },
-        volume: typeof parsed.volume === 'number' ? parsed.volume : defaultSettingsState.volume,
-    };
+    try {
+        const parsed = JSON.parse(saved) as Partial<SettingsState>;
+        return {
+            notifications: {
+                schedule: parsed.notifications?.schedule ?? defaultSettingsState.notifications.schedule,
+            },
+            reminder: {
+                day: parsed.reminder?.day ?? defaultSettingsState.reminder.day,
+                time: parsed.reminder?.time ?? defaultSettingsState.reminder.time,
+            },
+            volume: typeof parsed.volume === 'number' ? parsed.volume : defaultSettingsState.volume,
+        };
+    } catch {
+        return defaultSettingsState;
+    }
 };
 
 const AccountSettings = () => {
@@ -97,10 +103,7 @@ const AccountSettings = () => {
     });
 
     const [state, setState] = useState<SettingsState>(defaultSettingsState);
-
     const [activeTab, setActiveTab] = useState<TabOption>('Account');
-  
-    
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
@@ -192,11 +195,12 @@ const AccountSettings = () => {
                             {(['Profile', 'Account', 'Game setting'] as TabOption[]).map((tab) => (
                                 <button
                                     key={tab}
+                                    type="button"
                                     onClick={() => setActiveTab(tab)}
                                     className={`
-                    relative pb-1 transition-colors hover:text-white
-                    ${activeTab === tab ? 'text-white font-medium' : ''}
-                  `}
+                                        relative pb-1 transition-colors hover:text-white
+                                        ${activeTab === tab ? 'text-white font-medium' : ''}
+                                    `}
                                 >
                                     {tab}
                                     {activeTab === tab && (
@@ -207,15 +211,18 @@ const AccountSettings = () => {
                         </nav>
                     </div>
 
-                    <button onClick={() => navigate(-1)} className="hidden md:flex items-center gap-2 text-[#9CA3AF] hover:text-white transition-colors group">
-                        <img src={arrowLeft} alt="arrow-left" className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="hidden md:flex items-center gap-2 text-[#9CA3AF] hover:text-white transition-colors group"
+                    >
+                        <img src={arrowLeft} alt="Back" className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
                         <span className="text-lg tracking-wide">BACK</span>
                     </button>
                 </div>
             </header>
 
             <main className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-
                 {/* PROFILE TAB */}
                 {activeTab === 'Profile' && (
                     <section>
@@ -224,45 +231,46 @@ const AccountSettings = () => {
                     </section>
                 )}
 
-                {/* GAME SETTING TAB (Placeholder) */}
+                {/* GAME SETTING TAB */}
                 {activeTab === 'Game setting' && (
-                   <section aria-labelledby="game-setting">
-                            <h2 id="gameplay-heading" className="text-2xl font-medium mb-6 text-[#CFFDED]">Gameplay</h2>
+                    <section aria-labelledby="gameplay-heading">
+                        <h2 id="gameplay-heading" className="text-2xl font-medium mb-6 text-[#CFFDED]">Gameplay</h2>
 
-                            <div className="space-y-2">
-                                <div className="text-[#717171] text-lg block">Preferred Game Mode</div>
-                                <div className="relative group">
-                                    <select
-                                        className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
-                                    >
-                                        <option value="classic-mode">Classic Mode</option>
-                                        <option value="Mode">Mode</option>
-                                        <option value="Mode">Mode</option>
-                                    
-                                    </select>
-                                    <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 text-[#717171] pointer-events-none group-hover:text-[#F9BC07] transition-colors" />
-                                </div>
+                        <div className="space-y-2">
+                            <label htmlFor="game-mode-select" className="text-[#717171] text-lg block">Preferred Game Mode</label>
+                            <div className="relative group">
+                                <select
+                                    id="game-mode-select"
+                                    className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
+                                >
+                                    <option value="classic-mode" className="bg-[#141516]">Classic Mode</option>
+                                    <option value="time-attack" className="bg-[#141516]">Time Attack</option>
+                                    <option value="survival-mode" className="bg-[#141516]">Survival Mode</option>
+                                </select>
+                                <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 text-[#717171] pointer-events-none group-hover:text-[#F9BC07] transition-colors" />
                             </div>
+                        </div>
 
-                        <div className="text-[#717171] text-lg pt-4">Difficulty Level</div>
-                        <div className='pt-3 flex gap-3'>
-                            <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Easy</button>
-                            <button className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516]">Medium</button>
-                            <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Hard</button>
+                        <div className="text-[#717171] text-lg pt-6">Difficulty Level</div>
+                        <div className="pt-3 flex gap-3">
+                            <button type="button" className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171] hover:border-[#F9BC07] transition-colors">Easy</button>
+                            <button type="button" className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516] font-medium">Medium</button>
+                            <button type="button" className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171] hover:border-[#F9BC07] transition-colors">Hard</button>
                         </div>
 
                         <hr className="border-[#353536] my-7" />
+
                         <div>
                             <h2 id="timer-heading" className="text-2xl font-medium mb-4 text-[#CFFDED]">Timer</h2>
                             <div className="text-[#717171] text-sm">Control the in-game countdown clock behaviour</div>
 
                             <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
-                                <span className="text-[#9CA3AF] text-lg">  Enable Countdown Timer</span>
-                                     <Toggle checked/>
+                                <span className="text-[#9CA3AF] text-lg">Enable Countdown Timer</span>
+                                <Toggle checked />
                             </div>
                             <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
-                                <span className="text-[#9CA3AF] text-lg">Time Warning Alert (30 s remaining)</span>
-                                     <Toggle checked/>
+                                <span className="text-[#9CA3AF] text-lg">Time Warning Alert (30s remaining)</span>
+                                <Toggle checked />
                             </div>
                         </div>
 
@@ -272,15 +280,15 @@ const AccountSettings = () => {
 
                             <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
                                 <span className="text-[#9CA3AF] text-lg">Call a Friend</span>
-                                     <Toggle checked/>
+                                <Toggle checked />
                             </div>
                             <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
                                 <span className="text-[#9CA3AF] text-lg">50 : 50 (remove two wrong options)</span>
-                                     <Toggle checked/>
+                                <Toggle checked />
                             </div>
                             <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
                                 <span className="text-[#9CA3AF] text-lg">Ask the Audience</span>
-                                     <Toggle checked/>
+                                <Toggle checked />
                             </div>
                         </div>
 
@@ -290,54 +298,59 @@ const AccountSettings = () => {
 
                             <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
                                 <span className="text-[#9CA3AF] text-lg">Auto-advance after correct answer</span>
-                                     <Toggle checked/>
+                                <Toggle checked />
                             </div>
                             <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
                                 <span className="text-[#9CA3AF] text-lg">Show answer feedback (green / red highlight)</span>
-                                     <Toggle checked={false} />
+                                <Toggle checked={false} />
                             </div>
                             <div className="text-[#717171] text-lg pt-8">Animation Speed</div>
-                            <div className='pt-3 flex gap-3'>
-                                <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Slow</button>
-                                <button className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516]">Normal</button>
-                                <button className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171]">Fast</button>
+                            <div className="pt-3 flex gap-3">
+                                <button type="button" className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171] hover:border-[#F9BC07] transition-colors">Slow</button>
+                                <button type="button" className="border border-[#353536] bg-[#F9BC07] rounded-md w-full h-12 mb-5 text-[#141516] font-medium">Normal</button>
+                                <button type="button" className="border border-[#353536] rounded-md w-full h-12 mb-5 text-[#717171] hover:border-[#F9BC07] transition-colors">Fast</button>
+                            </div>
                         </div>
-                        </div>
+
                         <div>
                             <h2 id="accessibility-heading" className="pt-10 text-2xl font-medium mb-4 text-[#CFFDED]">Accessibility</h2>
                             <div className="text-[#717171] text-sm">Make the game more comfortable to play</div>
 
                             <div className="pt-8 flex items-center justify-between border-b border-[#353536] pb-1">
                                 <span className="text-[#9CA3AF] text-lg">Reduce Motion</span>
-                                     <Toggle checked/>
+                                <Toggle checked />
                             </div>
                             <div className="pt-1 flex items-center justify-between border-b border-[#353536] pb-1">
                                 <span className="text-[#9CA3AF] text-lg">Large Text Mode</span>
-                                     <Toggle checked={false} />
+                                <Toggle checked={false} />
                             </div>
                         </div>
-                        <button className="border border-[#353536] rounded-md w-full md:w-50  h-12 mt-15 text-[#717171]">Reset to Defaults</button>
-                        </section>
+
+                        <button type="button" className="border border-[#353536] hover:border-[#F9BC07] rounded-md w-full md:w-52 h-12 mt-12 text-[#9CA3AF] hover:text-white transition-colors">
+                            Reset to Defaults
+                        </button>
+                    </section>
                 )}
 
-                {/* ACCOUNT TAB (Existing Content) */}
+                {/* ACCOUNT TAB */}
                 {activeTab === 'Account' && (
                     <>
                         <section aria-labelledby="notification-heading">
                             <h2 id="notification-heading" className="text-2xl font-medium mb-6 text-[#CFFDED]">Notification</h2>
 
                             <div className="space-y-2">
-                                <label className="text-[#717171] text-lg block">Notification Schedule</label>
+                                <label htmlFor="notification-schedule-select" className="text-[#717171] text-lg block">Notification Schedule</label>
                                 <div className="relative group">
                                     <select
+                                        id="notification-schedule-select"
                                         value={state.notifications.schedule || notificationSchedule}
                                         onChange={(e) => handleNotificationChange(e.target.value)}
                                         className="w-full bg-transparent border-b border-[#353536] text-[#9CA3AF] py-3 pr-10 appearance-none focus:outline-none focus:border-[#F9BC07] cursor-pointer"
                                     >
-                                        <option value="Daily">Daily</option>
-                                        <option value="Weekly">Weekly</option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Never">Never</option>
+                                        <option value="Daily" className="bg-[#141516]">Daily</option>
+                                        <option value="Weekly" className="bg-[#141516]">Weekly</option>
+                                        <option value="Monthly" className="bg-[#141516]">Monthly</option>
+                                        <option value="Never" className="bg-[#141516]">Never</option>
                                     </select>
                                     <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 text-[#717171] pointer-events-none group-hover:text-[#F9BC07] transition-colors" />
                                 </div>
@@ -345,8 +358,8 @@ const AccountSettings = () => {
                         </section>
 
                         <section aria-labelledby="reminder-heading">
-                            <h2 id="reminder-heading" className="text-2xl font-medium mb-6  text-[#CFFDED]">Reminder Me</h2>
-                            <p className="text-[#717171] text-lg mb-4">Notification Schedule</p>
+                            <h2 id="reminder-heading" className="text-2xl font-medium mb-6 text-[#CFFDED]">Remind Me</h2>
+                            <p className="text-[#717171] text-lg mb-4">Reminder Schedule</p>
 
                             <div className="space-y-6">
                                 <div className="flex items-center justify-between border-b border-[#353536] pb-3 hover:border-[#F9BC07] transition-colors group">
@@ -371,7 +384,7 @@ const AccountSettings = () => {
 
                         <section aria-labelledby="theme-heading">
                             <h2 id="theme-heading" className="text-2xl font-medium mb-2 text-[#CFFDED]">Theme</h2>
-                            <p className="text-[#717171] text-lg mb-4">Notification Schedule</p>
+                            <p className="text-[#717171] text-lg mb-4">Appearance & Theme Mode</p>
 
                             <div className="space-y-1">
                                 <Toggle
@@ -393,7 +406,7 @@ const AccountSettings = () => {
                                     onChange={() => handleThemeChange('system')}
                                 />
                             </div>
-                        section>
+                        </section>
 
                         <section aria-labelledby="sound-heading">
                             <h2 id="sound-heading" className="text-2xl font-medium mb-8 text-[#CFFDED]">Sound</h2>
@@ -427,54 +440,45 @@ const AccountSettings = () => {
                                 </span>
                             </div>
                         </section>
+
+                        <hr className="border-[#353536] mb-12" />
+
+                        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+                            <section className="space-y-4">
+                                <h3 className="text-xl md:text-2xl font-medium">Account Deletion Information</h3>
+                                <p className="text-[#9CA3AF] text-sm leading-relaxed">
+                                    If you are considering deleting your LogiQuest account, please take a moment to read the following important information:
+                                </p>
+                                <ul className="list-disc pl-5 space-y-2 text-[#9CA3AF] text-sm">
+                                    <li>
+                                        <span className="text-white font-medium">Permanent Action:</span> Deleting your account is a permanent action. Once deleted, you will lose access to your account, including all your game progress, scores, and any purchased items or coins.
+                                    </li>
+                                    <li>
+                                        <span className="text-white font-medium">Data Removal:</span> All personal information associated with your account will be permanently removed. This includes your username, email address, and any related gameplay data.
+                                    </li>
+                                </ul>
+                            </section>
+
+                            <section className="space-y-4">
+                                <h3 className="text-xl md:text-2xl font-medium">Need Help?</h3>
+                                <p className="text-[#9CA3AF] text-sm leading-relaxed">
+                                    If you have any questions or need assistance, feel free to contact our support team at <a href="mailto:support@logiquest.com" className="underline hover:text-[#F9BC07] transition-colors">support@logiquest.com</a>. We value your feedback and are here to help!
+                                    <br />
+                                    Thank you for being a part of the LogiQuest community!
+                                </p>
+                            </section>
+
+                            <button
+                                type="button"
+                                className="bg-[#E94B25] hover:bg-[#D43A15] text-white font-semibold py-3 px-8 rounded-md transition-colors focus:ring-2 focus:ring-[#E94B25] focus:ring-offset-2 focus:ring-offset-[#141516]"
+                                onClick={() => setOpenModal(true)}
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </>
                 )}
             </main>
-
-            {/* DIVIDER & FOOTER - Only show on Account Tab as per design context, or all tabs? 
-                Usually settings footers are global, but the prompt implies "Account Data" which might be specific to Account Tab. 
-                However, for now I will keep it visible or hide it based on standard UX. 
-                Given the request "Please this page should only be on account", it implies the WHOLE content seen before.
-                So I will wrap the footer in the Account check too.
-            */}
-            {activeTab === 'Account' && (
-                <>
-                    <hr className="border-[#353536] mb-12" />
-
-                    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
-                        <section className="space-y-4">
-                            <h3 className="text-xl md:text-2xl font-medium">Account Deletion Information</h3>
-                            <p className="text-[#9CA3AF] text-sm leading-relaxed">
-                                If you are considering deleting your LogiQuest account, please take a moment to read the following important information:
-                            </p>
-                            <ul className="list-disc pl-5 space-y-2 text-[#9CA3AF] text-sm">
-                                <li>
-                                    <span className="text-white font-medium">Permanent Action:</span> Deleting your account is a permanent action. Once deleted, you will lose access to your account, including all your game progress, scores, and any purchased items or coins.
-                                </li>
-                                <li>
-                                    <span className="text-white font-medium">Data Removal:</span> All personal information associated with your account will be permanently removed. This includes your username, email address, and any related gameplay data.
-                                </li>
-                            </ul>
-                        </section>
-
-                        <section className="space-y-4">
-                            <h3 className="text-xl md:text-2xl font-medium">Need Help?</h3>
-                            <p className="text-[#9CA3AF] text-sm leading-relaxed">
-                                If you have any questions or need assistance, feel free to contact our support team at <a href="mailto:support@logiquest.com" className="underline hover:text-[#F9BC07] transition-colors">support@logiquest.com</a>. We value your feedback and are here to help!
-                                <br />
-                                Thank you for being a part of the LogiQuest community!
-                            </p>
-                        </section>
-
-                        <button
-                            className="bg-[#E94B25] hover:bg-[#D43A15] text-white font-semibold py-3 px-8 rounded-md transition-colors focus:ring-2 focus:ring-[#E94B25] focus:ring-offset-2 focus:ring-offset-[#141516]"
-                            onClick={()=> setOpenModal(true)}
-                        >
-                            Delete
-                        </button>
-                    </div>
-                </>
-            )}
 
             <DeleteAccountModal setCloseModal={setOpenModal} openModal={openModal} />
         </div>
