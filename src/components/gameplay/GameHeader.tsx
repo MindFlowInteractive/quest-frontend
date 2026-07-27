@@ -1,92 +1,163 @@
-import coinsIcon from '../../assets/images/pngs/coins.png';
-import callAFriend from '../../assets/images/pngs/call_a_friend.png';
-import fiftyFifty from '../../assets/images/pngs/fifty_fifty.png';
-import door from '../../assets/images/pngs/door.png';
-import logiQuest from '../../assets/images/pngs/logiquest_logo.png';
-import audience from '../../assets/images/pngs/audience.png';
-import bell from '../../assets/images/pngs/bell.png';
-import avatar from '../../assets/images/pngs/avatar.png';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Bell, LogOut, Store, Gamepad2, Settings, Phone, Users, Divide, Coins } from 'lucide-react';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useLifeline } from '../../features/game/gameSlice'; // Adjust import path to match your slice
+import { showToast } from '../../features/toast/toastSlice';   // Adjust import path to match your slice
 
-import { Link, NavLink } from 'react-router-dom';
+export const GameHeader: React.FC = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
-const navItemClass =
-  'hover:text-white transition-colors rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]';
+    // Redux selectors for lifelines and user state
+    const lifelines = useAppSelector((state) => state.game.lifelines) || {
+        phoneAFriend: 1,
+        fiftyFifty: 1,
+        askAudience: 1,
+    };
+    const coins = useAppSelector((state) => state.game.coins) ?? 0;
 
-const GameHeader = () => {
-  return (
-    <header className="flex items-center justify-between bg-[#0a0a0a] px-8 py-4 text-white border-b border-gray-800">
-      <Link
-        to="/"
-        className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer group rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-      >
-        <div className="w-10 h-10">
-          <img src={logiQuest} alt="" className="w-full h-full" />
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight text-white group-hover:text-yellow-500 transition-colors">
-          <span className="sr-only">LogiQuest home</span>
-          <span aria-hidden="true">LogiQuest</span>
-        </h1>
-      </Link>
+    const handleUseLifeline = (type: 'phoneAFriend' | 'fiftyFifty' | 'askAudience', name: string) => {
+        if (lifelines[type] <= 0) {
+            dispatch(showToast({ message: `${name} lifeline is no longer available!`, type: 'warning' }));
+            return;
+        }
 
-      <nav className="flex items-center gap-8 text-[#d4af37] font-medium text-sm" aria-label="Game navigation">
-        <NavLink to="/store" className={navItemClass}>
-          Store
-        </NavLink>
-        <NavLink to="/game-mode" className={navItemClass}>
-          Game mode
-        </NavLink>
-        <NavLink to="/settings" className={navItemClass}>
-          Setting
-        </NavLink>
-      </nav>
+        dispatch(useLifeline({ type }));
+        dispatch(showToast({ message: `Used ${name} lifeline!`, type: 'info' }));
+    };
 
-      <div className="flex items-center gap-6">
-        <div className="flex items-center gap-2" aria-hidden="true">
-          <span className="text-[#d4af37] text-sm font-medium">Coins</span>
-          <img src={coinsIcon} alt="" className="w-10 h-10" />
-        </div>
+    const handleLogout = () => {
+        // Handle logout / exit session logic
+        navigate('/login');
+    };
 
-        <div className="flex items-center gap-2" aria-hidden="true">
-          <span className="text-[#d4af37] text-sm font-medium whitespace-nowrap">Call a friend</span>
-          <img src={callAFriend} alt="" className="w-10 h-10" />
-        </div>
+    return (
+        <header className="w-full bg-[#141516] border-b border-[#353536] px-4 py-3 flex items-center justify-between font-prompt">
+            {/* Left Nav Cluster */}
+            <nav className="flex items-center gap-4 md:gap-6" aria-label="Game navigation">
+                <button
+                    type="button"
+                    onClick={() => navigate('/store')}
+                    className="flex items-center gap-2 text-[#9CA3AF] hover:text-[#F9BC07] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F9BC07] rounded-md px-2 py-1 text-sm md:text-base font-medium"
+                    aria-label="Open Store"
+                >
+                    <Store className="w-5 h-5" aria-hidden="true" />
+                    <span className="hidden sm:inline">Store</span>
+                </button>
 
-        <div className="flex items-center gap-2" aria-hidden="true">
-          <span className="text-sm font-medium">50 : 50</span>
-          <img src={fiftyFifty} alt="" className="w-10 h-10" />
-        </div>
+                <button
+                    type="button"
+                    onClick={() => navigate('/game-mode')}
+                    className="flex items-center gap-2 text-[#9CA3AF] hover:text-[#F9BC07] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F9BC07] rounded-md px-2 py-1 text-sm md:text-base font-medium"
+                    aria-label="Select Game Mode"
+                >
+                    <Gamepad2 className="w-5 h-5" aria-hidden="true" />
+                    <span className="hidden sm:inline">Game Mode</span>
+                </button>
 
-        <div className="flex items-center gap-2" aria-hidden="true">
-          <span className="text-[#d4af37] text-sm font-medium">Audience</span>
-          <img src={audience} alt="" className="w-10 h-10" />
-        </div>
+                <button
+                    type="button"
+                    onClick={() => navigate('/settings')}
+                    className="flex items-center gap-2 text-[#9CA3AF] hover:text-[#F9BC07] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F9BC07] rounded-md px-2 py-1 text-sm md:text-base font-medium"
+                    aria-label="Open Settings"
+                >
+                    <Settings className="w-5 h-5" aria-hidden="true" />
+                    <span className="hidden sm:inline">Settings</span>
+                </button>
+            </nav>
 
-        <div className="flex items-center gap-4 ml-4 border-l border-gray-700 pl-4">
-          <button
-            type="button"
-            className="p-0 border-0 bg-transparent cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-            aria-label="Notifications"
-          >
-            <img src={bell} alt="" className="w-10 h-10" />
-          </button>
-          <button
-            type="button"
-            className="p-0 border-0 bg-transparent cursor-pointer rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-            aria-label="Exit"
-          >
-            <img src={door} alt="" className="w-10 h-10" />
-          </button>
-          <NavLink
-            to="/settings"
-            aria-label="Account settings"
-            className="block w-8 h-8 rounded-full bg-cyan-200 overflow-hidden border border-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F9BC07] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]"
-          >
-            <img src={avatar} alt="" className="w-full h-full object-cover" />
-          </NavLink>
-        </div>
-      </div>
-    </header>
-  );
+            {/* Middle Lifelines & Coins Counter (Desktop/Tablet) */}
+            <div className="hidden md:flex items-center gap-4">
+                {/* Coins Badge */}
+                <div 
+                    className="flex items-center gap-1.5 bg-[#1F2022] border border-[#353536] px-3 py-1.5 rounded-full text-[#F9BC07] text-sm font-semibold"
+                    aria-label={`${coins} coins available`}
+                >
+                    <Coins className="w-4 h-4" aria-hidden="true" />
+                    <span>{coins}</span>
+                </div>
+
+                {/* Lifeline: Phone a Friend */}
+                <button
+                    type="button"
+                    onClick={() => handleUseLifeline('phoneAFriend', 'Call a Friend')}
+                    disabled={lifelines.phoneAFriend <= 0}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#F9BC07] ${
+                        lifelines.phoneAFriend > 0
+                            ? 'bg-[#1F2022] border-[#353536] text-white hover:border-[#F9BC07]'
+                            : 'bg-[#141516] border-[#262626] text-[#525252] cursor-not-allowed'
+                    }`}
+                    aria-label={`Use Call a Friend lifeline (${lifelines.phoneAFriend} remaining)`}
+                >
+                    <Phone className="w-4 h-4" aria-hidden="true" />
+                    <span>Call ({lifelines.phoneAFriend})</span>
+                </button>
+
+                {/* Lifeline: 50:50 */}
+                <button
+                    type="button"
+                    onClick={() => handleUseLifeline('fiftyFifty', '50:50')}
+                    disabled={lifelines.fiftyFifty <= 0}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#F9BC07] ${
+                        lifelines.fiftyFifty > 0
+                            ? 'bg-[#1F2022] border-[#353536] text-white hover:border-[#F9BC07]'
+                            : 'bg-[#141516] border-[#262626] text-[#525252] cursor-not-allowed'
+                    }`}
+                    aria-label={`Use 50:50 lifeline (${lifelines.fiftyFifty} remaining)`}
+                >
+                    <Divide className="w-4 h-4" aria-hidden="true" />
+                    <span>50:50 ({lifelines.fiftyFifty})</span>
+                </button>
+
+                {/* Lifeline: Ask the Audience */}
+                <button
+                    type="button"
+                    onClick={() => handleUseLifeline('askAudience', 'Ask Audience')}
+                    disabled={lifelines.askAudience <= 0}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-all focus:outline-none focus:ring-2 focus:ring-[#F9BC07] ${
+                        lifelines.askAudience > 0
+                            ? 'bg-[#1F2022] border-[#353536] text-white hover:border-[#F9BC07]'
+                            : 'bg-[#141516] border-[#262626] text-[#525252] cursor-not-allowed'
+                    }`}
+                    aria-label={`Use Ask Audience lifeline (${lifelines.askAudience} remaining)`}
+                >
+                    <Users className="w-4 h-4" aria-hidden="true" />
+                    <span>Audience ({lifelines.askAudience})</span>
+                </button>
+            </div>
+
+            {/* Right Utility Cluster */}
+            <div className="flex items-center gap-3">
+                <button
+                    type="button"
+                    onClick={() => navigate('/notifications')}
+                    className="p-2 text-[#9CA3AF] hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#F9BC07] rounded-full"
+                    aria-label="View notifications"
+                >
+                    <Bell className="w-5 h-5" aria-hidden="true" />
+                </button>
+
+                <button
+                    type="button"
+                    onClick={() => navigate('/profile')}
+                    className="w-8 h-8 rounded-full overflow-hidden border border-[#353536] hover:border-[#F9BC07] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F9BC07]"
+                    aria-label="View profile"
+                >
+                    <img src="/avatar-placeholder.png" alt="" className="w-full h-full object-cover" />
+                </button>
+
+                <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="p-2 text-[#9CA3AF] hover:text-[#E94B25] transition-colors focus:outline-none focus:ring-2 focus:ring-[#E94B25] rounded-full"
+                    aria-label="Exit game session"
+                >
+                    <LogOut className="w-5 h-5" aria-hidden="true" />
+                </button>
+            </div>
+        </header>
+    );
 };
 
 export default GameHeader;
