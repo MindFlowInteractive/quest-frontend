@@ -3,9 +3,9 @@ import { useState } from "react";
 const faqs = [
   {
     id: 1,
-    question: "What is LogiGuest?",
+    question: "What is LogiQuest?",
     answer:
-      "LogiGuest is an interactive web-based game designed to test your logic and knowledge through various fun and challenging game modes.",
+      "LogiQuest is an interactive web-based game designed to test your logic and knowledge through various fun and challenging game modes.",
   },
   {
     id: 2,
@@ -74,6 +74,8 @@ const FaqsSection = () => {
               {/* Questions */}
               <button
                 onClick={() => toggle(faq.id)}
+                aria-expanded={openIds.includes(faq.id)}
+                aria-controls={`faq-${faq.id}-panel`}
                 className="w-full flex justify-between items-center py-4 md:py-5 text-left"
               >
                 <span className="text-lg md:text-xl font-semibold text-white pr-4">
@@ -93,6 +95,8 @@ const FaqsSection = () => {
 
               {/* Answers */}
               <div
+                id={`faq-${faq.id}-panel`}
+                role="region"
                 className={`overflow-hidden transition-all duration-300 ${openIds.includes(faq.id) ? "max-h-96 py-4" : "max-h-0"
                   }`}
               >
