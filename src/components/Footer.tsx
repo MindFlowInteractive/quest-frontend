@@ -2,7 +2,26 @@ import logiquest from "../assets/logiquest.png";
 import { Linkedin, Twitter, Github } from "lucide-react";
 
 export default function LogiQuestFooter() {
-    // Placeholder for logo - replace with: import logiquest from '../assets/logiquest.png'; height='100'%3E%3Crect fill='%2306b6d4' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' text-anchor='middle' dy='.3em' fill='white'%3ELQ%3C/text%3E%3C/svg%3E";
+    const gameModes = [
+        "Classic Mode",
+        "Challenge Mode",
+        "Multiplayer Mode",
+        "Daily Challenge",
+        "Themed Quests",
+        "Timed Blitz",
+        "Puzzle Mode",
+        "Practice Mode",
+        "Adventure Mode",
+    ];
+
+    const infoLinks = ["FAQs", "Pricing", "Status", "Blog", "Policy"];
+
+    const bottomLinks = [
+        "About us",
+        "Terms & Conditions",
+        "Contact us",
+        "Privacy policy",
+    ];
 
     return (
         <footer className="bg-black text-white">
@@ -27,105 +46,17 @@ export default function LogiQuestFooter() {
                             Game Mode
                         </h3>
                         <ul className="space-y-2 sm:space-y-3">
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Classic Mode
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Challenge Mode
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Multiplayer Mode
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Daily Challenge
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Themed Quests
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Timed Blitz
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Puzzle Mode
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Practice Mode
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Adventure Mode
-                                </a>
-                            </li>
+                            {gameModes.map((mode) => (
+                                <li key={mode} className="flex items-start">
+                                    <span className="text-white mr-2 mt-1 text-xs">•</span>
+                                    <a
+                                        href="#"
+                                        className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
+                                    >
+                                        {mode}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -135,61 +66,17 @@ export default function LogiQuestFooter() {
                             Info
                         </h3>
                         <ul className="space-y-2 sm:space-y-3">
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    FAQs
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Pricing
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Status
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Blog
-                                </a>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="text-white mr-2 mt-1 text-xs">
-                                    •
-                                </span>
-                                <a
-                                    href="#"
-                                    className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
-                                >
-                                    Policy
-                                </a>
-                            </li>
+                            {infoLinks.map((item) => (
+                                <li key={item} className="flex items-start">
+                                    <span className="text-white mr-2 mt-1 text-xs">•</span>
+                                    <a
+                                        href="#"
+                                        className="text-gray-300 hover:text-cyan-400 transition-colors text-sm"
+                                    >
+                                        {item}
+                                    </a>
+                                </li>
+                            ))}
                         </ul>
                     </div>
 
@@ -199,22 +86,25 @@ export default function LogiQuestFooter() {
                             Newsletter
                         </h3>
                         <p className="text-gray-300 text-sm mb-4 sm:mb-6 leading-relaxed">
-                            Subscribe to our weekly newsletter dose for updated,
-                            Tips, Helps Info and exclusive offers.
+                            Subscribe to our weekly newsletter dose for updated, Tips, Helps
+                            Info and exclusive offers.
                         </p>
 
-                        <div className="mb-4 sm:mb-6">
+                        <form onSubmit={(e) => e.preventDefault()} className="mb-4 sm:mb-6">
                             <div className="flex flex-col sm:flex-row gap-2">
                                 <input
                                     type="email"
                                     placeholder="Your email"
                                     className="flex-1 px-4 py-3 bg-transparent border border-gray-600 rounded-md text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors text-sm"
                                 />
-                                <button className="px-6 py-3 bg-teal-800 hover:bg-teal-700 text-white rounded-md transition-colors text-sm font-medium whitespace-nowrap">
+                                <button
+                                    type="submit"
+                                    className="px-6 py-3 bg-teal-800 hover:bg-teal-700 text-white rounded-md transition-colors text-sm font-medium whitespace-nowrap"
+                                >
                                     Subscribe now
                                 </button>
                             </div>
-                        </div>
+                        </form>
 
                         {/* Social Icons */}
                         <div className="flex space-x-4 mb-4 sm:mb-6">
@@ -299,33 +189,18 @@ export default function LogiQuestFooter() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 sm:py-6">
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <p className="text-gray-400 text-xs sm:text-sm text-center sm:text-left order-2 sm:order-1">
-                            Copyright © 2025 LogiQuest All Rights Reserved
+                            Copyright © {new Date().getFullYear()} LogiQuest All Rights Reserved
                         </p>
                         <div className="flex flex-wrap justify-center sm:justify-end gap-4 sm:gap-6 order-1 sm:order-2">
-                            <a
-                                href="#"
-                                className="text-gray-400 hover:text-cyan-400 transition-colors text-xs sm:text-sm"
-                            >
-                                About us
-                            </a>
-                            <a
-                                href="#"
-                                className="text-gray-400 hover:text-cyan-400 transition-colors text-xs sm:text-sm"
-                            >
-                                Terms & Conditions
-                            </a>
-                            <a
-                                href="#"
-                                className="text-gray-400 hover:text-cyan-400 transition-colors text-xs sm:text-sm"
-                            >
-                                Contact us
-                            </a>
-                            <a
-                                href="#"
-                                className="text-gray-400 hover:text-cyan-400 transition-colors text-xs sm:text-sm"
-                            >
-                                Privacy policy
-                            </a>
+                            {bottomLinks.map((link) => (
+                                <a
+                                    key={link}
+                                    href="#"
+                                    className="text-gray-400 hover:text-cyan-400 transition-colors text-xs sm:text-sm"
+                                >
+                                    {link}
+                                </a>
+                            ))}
                         </div>
                     </div>
                 </div>
