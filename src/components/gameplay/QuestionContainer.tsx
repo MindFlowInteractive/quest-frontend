@@ -63,8 +63,15 @@ const QuestionContainer: React.FC<QuestionContainerProps> = ({
         setTimeLeft(prev => (prev <= 1 ? 0 : prev - 1));
       }, 1000);
       return () => clearInterval(interval);
+    } else if (timeLeft === 0 && !isSubmitted) {
+      // Auto-submit as incorrect when time runs out
+      setIsSubmitted(true);
+      const progressDelay = setTimeout(() => {
+        onAnswerSubmit?.('', false, timeLimit);
+      }, 1500);
+      return () => clearTimeout(progressDelay);
     }
-  }, [timeLeft, isSubmitted]);
+  }, [timeLeft, isSubmitted, timeLimit, onAnswerSubmit]);
 
   // Map raw data to the visual states your UI uses
   const formattedAnswers: AnswerState[] = answers.map((answer, index) => ({
